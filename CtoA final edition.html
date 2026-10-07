@@ -1,0 +1,2748 @@
+<!doctype html>
+<html lang="en" data-theme="forge">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f0c08" id="themeColor">
+<meta name="description" content="CtoA — Turn any HTML project into a native Android APK. Free, no signup, no server.">
+<title>CtoA — Code to App</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230f0c08'/><circle cx='50' cy='50' r='24' fill='none' stroke='%23ffb84a' stroke-width='6'/><circle cx='50' cy='50' r='8' fill='%23ffb84a'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<style>
+/* ============ THEMES ============ */
+:root,:root[data-theme="forge"]{--bg:#0f0c08;--bg-2:#16120b;--card:#1e1810;--card-2:#261e14;--ink:#f0e0c0;--ink-2:#b89868;--ink-3:#6a5638;--line:rgba(240,224,192,.14);--line-2:rgba(240,224,192,.06);--accent:#ffb84a;--accent-deep:#ffcc70;--accent-soft:rgba(255,184,74,.12);--ok:#7dd87d;--ok-soft:rgba(125,216,125,.14);--warn:#ffcc4a;--danger:#ff6b5a;--danger-soft:rgba(255,107,90,.14);--code-bg:#080604;--code-ink:#f0e0c0;--code-accent:#ffb84a;--grain:.04;--grain-blend:screen;color-scheme:dark}
+:root[data-theme="cobalt"]{--bg:#080f1a;--bg-2:#0d1626;--card:#131e30;--card-2:#1a2840;--ink:#e0ecf8;--ink-2:#8aa8c8;--ink-3:#4a5a72;--line:rgba(224,236,248,.14);--line-2:rgba(224,236,248,.06);--accent:#4aa8ff;--accent-deep:#70c0ff;--accent-soft:rgba(74,168,255,.12);--ok:#7dd87d;--ok-soft:rgba(125,216,125,.14);--warn:#ffcc4a;--danger:#ff6b5a;--danger-soft:rgba(255,107,90,.14);--code-bg:#030712;--code-ink:#e0ecf8;--code-accent:#4aa8ff;--grain:.03;--grain-blend:screen;color-scheme:dark}
+:root[data-theme="phosphor"]{--bg:#060906;--bg-2:#0a0f0a;--card:#0e150e;--card-2:#141c14;--ink:#c8f0c8;--ink-2:#7a9a7a;--ink-3:#42564a;--line:rgba(200,240,200,.14);--line-2:rgba(200,240,200,.06);--accent:#7dff4d;--accent-deep:#a8ff88;--accent-soft:rgba(125,255,77,.12);--ok:#7dff4d;--ok-soft:rgba(125,255,77,.14);--warn:#e8d84a;--danger:#ff6b5a;--danger-soft:rgba(255,107,90,.14);--code-bg:#020402;--code-ink:#c8f0c8;--code-accent:#7dff4d;--grain:.03;--grain-blend:screen;color-scheme:dark}
+:root[data-theme="rose"]{--bg:#180a10;--bg-2:#200e14;--card:#2a141c;--card-2:#341a24;--ink:#f5e0e8;--ink-2:#c89098;--ink-3:#7a4a56;--line:rgba(245,224,232,.14);--line-2:rgba(245,224,232,.06);--accent:#ff4d6b;--accent-deep:#ff7a90;--accent-soft:rgba(255,77,107,.12);--ok:#7dd87d;--ok-soft:rgba(125,216,125,.14);--warn:#ffcc4a;--danger:#ff5544;--danger-soft:rgba(255,85,68,.14);--code-bg:#080406;--code-ink:#f5e0e8;--code-accent:#ff4d6b;--grain:.04;--grain-blend:screen;color-scheme:dark}
+:root[data-theme="bone"]{--bg:#f4ebdc;--bg-2:#e8ddc8;--card:#fbf4e4;--card-2:#f4ebdc;--ink:#1a1512;--ink-2:#5a4a3a;--ink-3:#a09080;--line:rgba(26,21,18,.16);--line-2:rgba(26,21,18,.06);--accent:#c1501c;--accent-deep:#8a1e0f;--accent-soft:rgba(193,80,28,.10);--ok:#4a7a2a;--ok-soft:rgba(74,122,42,.10);--warn:#a8720c;--danger:#8a1e0f;--danger-soft:rgba(138,30,15,.10);--code-bg:#1a1512;--code-ink:#f0e0c4;--code-accent:#d8a86a;--grain:.05;--grain-blend:multiply;color-scheme:light}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg);-webkit-text-size-adjust:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.55;font-size:15px;-webkit-font-smoothing:antialiased;transition:background-color .4s ease,color .4s ease;overflow-x:hidden;display:flex;flex-direction:column;position:relative;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:var(--grain);mix-blend-mode:var(--grain-blend);pointer-events:none}
+main,header,footer,aside,.guide{position:relative;z-index:2}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input,textarea,select{font:inherit;color:inherit;font-family:inherit}
+svg{display:block;max-width:100%}
+.hidden{display:none !important}
+::selection{background:var(--accent);color:var(--bg)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:500;letter-spacing:-.02em;line-height:1.1}
+
+/* ============ HEADER ============ */
+.site-header{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line-2)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px clamp(18px,4vw,32px);max-width:1200px;margin-inline:auto}
+.brand{display:flex;align-items:baseline;gap:6px;color:var(--ink);flex-shrink:0;text-decoration:none}
+.brand-word{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:1.5rem;letter-spacing:-.035em;line-height:1}
+.brand-mark{font-family:'JetBrains Mono',monospace;font-size:.66rem;font-weight:700;color:var(--accent);letter-spacing:.04em}
+.brand-divider{width:1px;height:14px;background:var(--line);margin-inline:6px}
+.brand-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:500;color:var(--ink-3);letter-spacing:.14em;text-transform:uppercase}
+@media (max-width:560px){.brand-tag,.brand-divider{display:none}}
+.header-actions{display:flex;gap:4px;flex-shrink:0;align-items:center}
+.icon-btn{width:38px;height:38px;display:grid;place-items:center;color:var(--ink-2);border:1px solid transparent;transition:all .18s ease;position:relative}
+.icon-btn:hover{background:var(--card);border-color:var(--line);color:var(--accent)}
+.icon-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.icon-btn .dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--ok-soft)}
+.icon-btn .dot.off{background:var(--danger);box-shadow:0 0 0 3px var(--danger-soft)}
+.icon-btn .dot.pending{background:var(--warn);box-shadow:0 0 0 3px rgba(255,204,74,.15)}
+
+/* ============ LAYOUT ============ */
+#landing{padding:clamp(28px,5vw,54px) clamp(18px,4vw,32px) 40px;max-width:1100px;margin-inline:auto;width:100%}
+.hero{max-width:820px;margin-bottom:clamp(28px,5vw,48px);animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:.98rem;color:var(--ink-2);margin-bottom:22px}
+.hero-eyebrow::before{content:'';width:36px;height:1px;background:var(--accent)}
+.hero-eyebrow b{color:var(--accent);font-weight:400;font-style:normal;font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
+.hero h1{font-size:clamp(2.2rem,6.5vw,4.4rem);line-height:.94;letter-spacing:-.045em;margin-bottom:20px;font-weight:400}
+.hero h1 em{font-style:italic;font-weight:300;color:var(--accent)}
+.hero-sub{font-size:clamp(.94rem,1.8vw,1.06rem);line-height:1.65;color:var(--ink-2);max-width:640px}
+.hero-sub b{color:var(--ink);font-weight:600}
+.hero-features{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;padding-top:20px;border-top:1px solid var(--line-2)}
+.hero-feature{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink-3);letter-spacing:.02em;display:inline-flex;align-items:center;gap:8px}
+.hero-feature b{color:var(--accent);font-weight:700}
+.hero-feature::before{content:'>';color:var(--accent);font-weight:700}
+
+/* ============ CARD ============ */
+.card{background:var(--card);border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.05),0 24px 48px -32px rgba(0,0,0,.5);overflow:hidden;max-width:1000px;animation:rise .65s cubic-bezier(.2,.8,.2,1) .1s both}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 22px;border-bottom:1px solid var(--line-2);background:var(--card-2);flex-wrap:wrap}
+.card-head h2{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:1.15rem;font-weight:400}
+.card-head h2 b{font-weight:600;color:var(--accent);font-style:normal;font-family:'JetBrains Mono',monospace;font-size:.86rem}
+.card-head .hint{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--ink-3);letter-spacing:.03em}
+.card-body{padding:22px}
+@media (max-width:520px){.card-body{padding:16px}}
+
+/* ============ STEPS NAV ============ */
+.steps-nav{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.step-pill{padding:8px 14px;background:var(--card-2);border:1px solid var(--line-2);color:var(--ink-3);font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:600;letter-spacing:.02em;display:inline-flex;align-items:center;gap:8px;transition:all .18s ease;cursor:pointer;white-space:nowrap}
+.step-pill .num{color:var(--accent);font-weight:700}
+.step-pill.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.step-pill.active .num{color:var(--bg)}
+.step-pill.done{background:var(--card);color:var(--ink-2);border-color:var(--line)}
+.step-pill.done .num{color:var(--ok)}
+
+/* ============ PANELS ============ */
+.panel{display:none}
+.panel.active{display:block;animation:panelIn .3s ease both}
+@keyframes panelIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ============ SETUP HERO ============ */
+.setup-hero{background:linear-gradient(135deg,var(--accent-soft) 0%,transparent 100%);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);padding:22px;margin-bottom:22px}
+.setup-hero h3{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:1.15rem;font-weight:400;color:var(--ink);margin-bottom:8px}
+.setup-hero p{font-size:.86rem;color:var(--ink-2);line-height:1.6}
+.setup-hero p b{color:var(--ink);font-weight:600}
+.setup-hero .link-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:var(--accent);color:var(--bg);font-family:'Inter',sans-serif;font-size:.86rem;font-weight:600;border-radius:6px;text-decoration:none;margin-top:12px;transition:all .18s ease}
+.setup-hero .link-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px -8px var(--accent)}
+.setup-hero .link-btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.setup-steps{list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.setup-steps li{counter-increment:s;position:relative;padding:12px 14px 12px 46px;background:var(--bg-2);border:1px solid var(--line-2);font-size:.86rem;color:var(--ink-2);line-height:1.55}
+.setup-steps li::before{content:counter(s,decimal-leading-zero);position:absolute;left:14px;top:50%;transform:translateY(-50%);font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:.94rem;color:var(--accent);font-weight:500}
+.setup-steps li b{color:var(--ink);font-weight:600}
+.setup-steps li code{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--code-bg);color:var(--code-accent);padding:2px 6px;border-radius:3px}
+
+/* ============ FIELDS ============ */
+.field{margin-bottom:16px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.field-row{grid-template-columns:1fr}}
+.field-label{display:flex;align-items:baseline;gap:8px;font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px}
+.field-label b{color:var(--ink);font-weight:600;font-family:'Inter',sans-serif;letter-spacing:-.01em;text-transform:none;font-size:.78rem}
+.field-label .opt{color:var(--ink-3);opacity:.7;text-transform:none;letter-spacing:.02em;font-weight:400}
+.input,.select{width:100%;padding:11px 14px;background:var(--bg-2);border:1.5px solid var(--line);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:.86rem;transition:all .18s ease;outline:none;direction:ltr;text-align:left}
+.input::placeholder{color:var(--ink-3)}
+.input:focus,.select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.hint-text{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--ink-3);margin-top:5px;line-height:1.5}
+.hint-text a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent)}
+.privacy-note{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;background:var(--ok-soft);border:1px solid color-mix(in srgb,var(--ok) 30%,transparent);margin-top:14px;font-size:.82rem;color:var(--ink-2);line-height:1.55}
+.privacy-note svg{width:16px;height:16px;flex-shrink:0;margin-top:2px;stroke:var(--ok);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.privacy-note b{color:var(--ok);font-weight:600}
+
+/* ============ CONNECTION BANNER ============ */
+.conn-banner{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--card);border:1px solid var(--line);margin-bottom:22px;flex-wrap:wrap;animation:rise .65s cubic-bezier(.2,.8,.2,1) .05s both}
+.conn-banner.ready{background:var(--ok-soft);border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
+.conn-banner.pending{background:rgba(255,204,74,.10);border-color:rgba(255,204,74,.35)}
+.conn-banner.error{background:var(--danger-soft);border-color:color-mix(in srgb,var(--danger) 40%,transparent)}
+.conn-icon{width:34px;height:34px;flex-shrink:0;display:grid;place-items:center;background:var(--card-2);border:1px solid var(--line);color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px}
+.conn-banner.ready .conn-icon{background:var(--ok);color:var(--bg);border-color:var(--ok)}
+.conn-banner.error .conn-icon{background:var(--danger);color:#fff;border-color:var(--danger)}
+.conn-text{flex:1;min-width:180px}
+.conn-text h4{font-family:'Inter',sans-serif;font-size:.9rem;font-weight:600;color:var(--ink);margin-bottom:3px}
+.conn-text p{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--ink-3);letter-spacing:.02em;line-height:1.4;word-break:break-all}
+.conn-banner.ready .conn-text p{color:var(--ink-2)}
+.conn-action{padding:8px 14px;background:var(--card-2);border:1px solid var(--line);color:var(--ink-2);font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:600;letter-spacing:.02em;transition:all .15s ease;flex-shrink:0}
+.conn-action:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ============ DROP ZONE ============ */
+.drop-zone{border:1.5px dashed var(--line);padding:42px 22px;cursor:pointer;transition:all .22s ease;display:flex;flex-direction:column;align-items:center;gap:12px;background:var(--bg-2);text-align:center;position:relative}
+.drop-zone::before,.drop-zone::after{content:'';position:absolute;width:14px;height:14px;border:1px solid var(--accent);opacity:.4}
+.drop-zone::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.drop-zone::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 6%,var(--bg-2));transform:translateY(-1px)}
+.drop-zone svg{width:40px;height:40px;stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s ease}
+.drop-zone:hover svg{transform:translateY(-3px)}
+.drop-zone h3{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:1.1rem;font-weight:400;color:var(--ink)}
+.drop-zone p{font-size:.84rem;color:var(--ink-2);line-height:1.55;max-width:400px}
+.drop-zone code{font-family:'JetBrains Mono',monospace;font-size:.86em;background:var(--accent-soft);color:var(--accent);padding:2px 6px;border-radius:3px}
+.drop-zone .hint{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase;margin-top:4px}
+
+/* ============ BUTTONS ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 22px;background:var(--accent);color:var(--bg);font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:500;font-size:1.02rem;letter-spacing:-.005em;transition:all .2s ease;width:100%;margin-top:16px;cursor:pointer;position:relative;overflow:hidden}
+.btn:hover{background:var(--accent-deep);transform:translateY(-1px);box-shadow:0 8px 24px -8px var(--accent)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.btn .arrow{transition:transform .2s ease}
+.btn:hover .arrow{transform:translateX(4px)}
+.btn.dark{background:var(--code-bg);color:var(--accent);border:1px solid var(--accent)}
+.btn.dark:hover{background:var(--accent);color:var(--bg)}
+.btn.connecting{pointer-events:none}
+.btn-mini{padding:8px 12px;background:var(--card-2);border:1px solid var(--line);color:var(--ink-2);font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:500;letter-spacing:.02em;transition:all .15s ease;display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer}
+.btn-mini:hover{border-color:var(--accent);color:var(--accent)}
+.btn-mini svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ============ FILE LIST ============ */
+.filelist{margin-top:16px;border:1px solid var(--line-2);background:var(--bg-2);max-height:220px;overflow-y:auto}
+.filelist::-webkit-scrollbar{width:6px}
+.filelist::-webkit-scrollbar-thumb{background:var(--line)}
+.file-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line-2);font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--ink-2)}
+.file-item:last-child{border-bottom:0}
+.file-item .ico{width:16px;text-align:center;color:var(--accent);font-size:11px;flex-shrink:0}
+.file-item .fname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;text-align:left}
+.file-item .fsize{font-size:.66rem;color:var(--ink-3);flex-shrink:0}
+.file-item.entry .fname{color:var(--accent);font-weight:600}
+
+/* ============ ICON PICKER ============ */
+.icon-picker{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.icon-preview{width:80px;height:80px;flex-shrink:0;background:var(--card-2);border:1px solid var(--line);display:grid;place-items:center;overflow:hidden}
+.icon-preview img{width:100%;height:100%;object-fit:cover;display:block}
+.icon-actions{display:flex;flex-direction:column;gap:6px;flex:1;min-width:180px}
+.color-row{display:flex;gap:10px;align-items:center}
+.color-input{width:44px;height:44px;flex-shrink:0;border:1px solid var(--line);padding:0;background:transparent;cursor:pointer}
+.color-input::-webkit-color-swatch-wrapper{padding:0}
+.color-input::-webkit-color-swatch{border:0}
+.color-hex{flex:1;font-family:'JetBrains Mono',monospace;font-size:.82rem;text-transform:uppercase}
+
+/* ============ PHONE PREVIEW ============ */
+.phone-preview{display:flex;justify-content:center;padding:20px 0}
+.phone-frame{width:280px;height:560px;flex-shrink:0;background:#0a0a0a;border-radius:38px;padding:14px 10px;box-shadow:inset 0 0 0 2px #1a1a1a,inset 0 0 0 5px #2a2a2a,0 30px 60px -20px rgba(0,0,0,.6);position:relative;transform:scale(.9);transform-origin:center top}
+.phone-notch{position:absolute;top:22px;left:50%;transform:translateX(-50%);width:80px;height:6px;background:#0a0a0a;border-radius:3px;z-index:10}
+.phone-screen{width:100%;height:100%;background:#fff;border-radius:26px;overflow:hidden;position:relative}
+.phone-screen iframe{width:100%;height:100%;border:0;display:block}
+.phone-home{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:100px;height:3px;background:#3a3a3a;border-radius:2px}
+@media (max-width:520px){.phone-frame{transform:scale(.8);margin-bottom:-60px}}
+
+/* ============ SANITIZER ============ */
+.sanitizer-report{margin-top:16px;border:1px solid var(--line-2);background:var(--bg-2);overflow:hidden}
+.sanitizer-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--card-2);border-bottom:1px solid var(--line-2);font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);cursor:pointer;user-select:none}
+.sanitizer-head .count{display:inline-flex;gap:6px;align-items:center;font-weight:700;color:var(--accent)}
+.sanitizer-head .chev{transition:transform .2s ease;color:var(--ink-3)}
+.sanitizer-report.open .chev{transform:rotate(90deg)}
+.sanitizer-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.sanitizer-report.open .sanitizer-body{max-height:400px;overflow-y:auto}
+.sanitizer-body::-webkit-scrollbar{width:6px}
+.sanitizer-body::-webkit-scrollbar-thumb{background:var(--line)}
+.sanitizer-item{display:flex;gap:10px;padding:8px 14px;border-bottom:1px solid var(--line-2);font-family:'JetBrains Mono',monospace;font-size:.7rem;line-height:1.5}
+.sanitizer-item:last-child{border-bottom:0}
+.sanitizer-item .badge{flex-shrink:0;min-width:70px;color:var(--accent);font-weight:700;text-transform:uppercase;font-size:.62rem;letter-spacing:.05em}
+.sanitizer-item.warn .badge{color:var(--warn)}
+.sanitizer-item .text{flex:1;color:var(--ink-2);word-break:break-all}
+
+/* ============ BUILD STAGE ============ */
+.build-stage{margin-top:20px;padding:24px;background:var(--bg-2);border:1px solid var(--line-2);position:relative;overflow:hidden}
+.build-stage::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);background-size:60% 100%;animation:scan 2s linear infinite}
+@keyframes scan{0%{background-position:-100% 0}100%{background-position:200% 0}}
+.build-stage.done::before{background:var(--ok);animation:none}
+.build-stage.error::before{background:var(--danger);animation:none}
+.build-header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.build-orb{width:60px;height:60px;flex-shrink:0;position:relative;display:grid;place-items:center}
+.build-orb svg{width:100%;height:100%;position:absolute;inset:0;fill:none;stroke-width:3;stroke-linecap:round}
+.build-orb .ring-bg{stroke:var(--line);opacity:.3}
+.build-orb .ring-fg{stroke:var(--accent);stroke-dasharray:170;stroke-dashoffset:170;transition:stroke-dashoffset .6s cubic-bezier(.2,.8,.2,1);transform:rotate(-90deg);transform-origin:center}
+.build-orb .gear{color:var(--accent);font-size:24px;animation:spin 3s linear infinite;font-family:'JetBrains Mono',monospace;font-weight:700;line-height:1}
+@keyframes spin{to{transform:rotate(360deg)}}
+.build-orb.done .ring-fg{stroke:var(--ok)}
+.build-orb.done .gear{color:var(--ok);animation:none;font-size:28px}
+.build-orb.error .ring-fg{stroke:var(--danger)}
+.build-orb.error .gear{color:var(--danger);animation:none}
+.build-meta{flex:1;min-width:0}
+.build-meta h4{font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:4px}
+.build-meta p{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink-3);letter-spacing:.02em}
+.build-progress{height:6px;background:var(--line-2);overflow:hidden;position:relative;margin-bottom:16px}
+.build-progress-bar{height:100%;width:0%;background:var(--accent);transition:width .5s cubic-bezier(.2,.8,.2,1);position:relative;overflow:hidden}
+.build-progress-bar::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);animation:shimmer 1.8s infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.build-steps{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.build-step{display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--ink-3);opacity:.55;transition:all .3s ease;padding:6px 10px;background:transparent;border:1px solid transparent}
+.build-step.active{color:var(--accent);opacity:1;background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+.build-step.done{color:var(--ok);opacity:1}
+.build-step.done .check{color:var(--ok)}
+.build-step .check{width:14px;text-align:center;flex-shrink:0;color:var(--ink-3);font-weight:700;font-family:'JetBrains Mono',monospace}
+.build-step.active .check{color:var(--accent);animation:blink 1s infinite}
+@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:.3}}
+.build-log{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink-2);background:var(--code-bg);padding:12px 14px;max-height:280px;overflow-y:auto;line-height:1.6;direction:ltr;text-align:left;border:1px solid var(--line-2)}
+.build-log::-webkit-scrollbar{width:6px}
+.build-log::-webkit-scrollbar-thumb{background:var(--line)}
+.build-log .line{white-space:pre-wrap;word-break:break-word;margin-bottom:2px;opacity:0;animation:logIn .3s ease forwards}
+@keyframes logIn{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:none}}
+.build-log .line.ok{color:var(--ok)}
+.build-log .line.warn{color:var(--warn)}
+.build-log .line.err{color:var(--danger)}
+.build-log .line.dim{color:var(--ink-3)}
+.build-log .line.info{color:var(--accent)}
+.build-log .line.fix{color:var(--warn);font-weight:600}
+.build-success{display:flex;flex-direction:column;align-items:center;text-align:center;padding:14px 0;animation:rise .5s ease both}
+.build-success svg{width:72px;height:72px;color:var(--ok);margin-bottom:14px}
+.build-success .check-path{stroke-dasharray:50;stroke-dashoffset:50;animation:drawCheck .7s cubic-bezier(.2,.8,.2,1) .15s forwards}
+@keyframes drawCheck{to{stroke-dashoffset:0}}
+.build-success h4{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:1.4rem;font-weight:400;color:var(--ink);margin-bottom:6px}
+.build-success p{font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--ink-3);margin-bottom:20px}
+.build-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.build-stat{padding:10px 12px;background:var(--card-2);border:1px solid var(--line-2);text-align:center}
+.build-stat .v{font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700;color:var(--accent);display:block}
+.build-stat .l{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-top:4px;display:block}
+
+/* ============ GUIDE ============ */
+.guide-back{position:fixed;inset:0;z-index:1500;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,visibility .3s ease}
+.guide-back.open{opacity:1;visibility:visible;pointer-events:auto}
+.guide-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-46%) scale(.96);width:calc(100vw - 32px);max-width:820px;max-height:88vh;z-index:1501;background:var(--card);border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(0,0,0,.6);display:flex;flex-direction:column;overflow:hidden;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,visibility .3s ease,transform .38s cubic-bezier(.2,.8,.2,1)}
+.guide-panel.open{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+@media (max-width:640px){.guide-panel{width:100vw;height:100vh;max-height:100vh;top:0;left:0;transform:translate(0,100%);border:0;max-width:none}.guide-panel.open{transform:translate(0,0)}}
+.guide-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:26px 30px 20px;border-bottom:1px solid var(--line-2);flex-shrink:0}
+.guide-head h2{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:1.7rem;font-weight:400;letter-spacing:-.03em;line-height:1.1;margin-bottom:4px}
+.guide-head h2 b{color:var(--accent);font-weight:500;font-style:normal}
+.guide-head p{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--ink-3);letter-spacing:.05em}
+.guide-close{width:34px;height:34px;border-radius:50%;background:var(--card-2);border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-2);transition:all .18s ease;flex-shrink:0}
+.guide-close:hover{border-color:var(--accent);color:var(--accent);transform:rotate(90deg)}
+.guide-close svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.guide-body{flex:1;overflow-y:auto;padding:26px 30px 32px}
+.guide-body::-webkit-scrollbar{width:6px}
+.guide-body::-webkit-scrollbar-thumb{background:var(--line)}
+.guide-lead{font-family:'Fraunces',Georgia,serif;font-size:1.08rem;line-height:1.6;color:var(--ink-2);margin-bottom:26px}
+.guide-lead b{color:var(--ink);font-weight:500}
+.guide-section{margin-bottom:26px}
+.guide-section:last-child{margin-bottom:0}
+.guide-section h3{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.guide-section h3::after{content:'';flex:1;height:1px;background:var(--line-2)}
+.guide-steps{list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:8px}
+.guide-steps li{counter-increment:s;position:relative;padding:12px 14px 12px 46px;background:var(--bg-2);border:1px solid var(--line-2);font-size:.86rem;color:var(--ink-2);line-height:1.55}
+.guide-steps li::before{content:counter(s,decimal-leading-zero);position:absolute;left:14px;top:50%;transform:translateY(-50%);font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:.94rem;color:var(--accent);font-weight:500}
+.guide-steps li b{color:var(--ink);font-weight:600}
+.guide-steps li code{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--code-bg);color:var(--code-accent);padding:2px 6px;border-radius:3px}
+.guide-steps li a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent)}
+
+/* ============ TOAST ============ */
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);z-index:2000;padding:11px 20px;background:var(--ink);color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:.74rem;font-weight:500;letter-spacing:.02em;opacity:0;pointer-events:none;transition:opacity .26s ease,transform .3s cubic-bezier(.2,.8,.2,1);box-shadow:0 16px 40px -12px rgba(0,0,0,.5);max-width:calc(100vw - 32px);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.err{background:var(--danger);color:#fff}
+.toast.ok{background:var(--ok);color:var(--bg)}
+
+/* ============ FOOTER ============ */
+.site-footer{margin-top:auto;padding:32px clamp(18px,4vw,32px) 40px;padding-bottom:calc(40px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line-2);max-width:1200px;margin-inline:auto;width:100%}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--ink-3);letter-spacing:.03em}
+.footer-brand{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:.94rem;color:var(--ink-2);font-weight:400}
+.footer-brand b{color:var(--accent);font-weight:500;font-style:normal}
+.footer-inner a{color:var(--ink-2);text-decoration:none;transition:color .18s ease}
+.footer-inner a:hover{color:var(--accent)}
+
+@media (max-width:520px){
+  .hero h1{font-size:2.1rem}
+  .guide-head{padding:20px 22px 16px}
+  .guide-head h2{font-size:1.4rem}
+  .guide-body{padding:22px}
+  .build-stats{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#" class="brand" id="brandLink">
+      <span class="brand-word">CtoA</span>
+      <span class="brand-mark">88</span>
+      <span class="brand-divider"></span>
+      <span class="brand-tag" id="brandTag">code to app</span>
+    </a>
+    <div class="header-actions">
+      <button type="button" class="icon-btn" id="connBtn" title="GitHub connection">
+        <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        <span class="dot off" id="connDot"></span>
+      </button>
+      <button type="button" class="icon-btn" id="helpBtn" title="Guide (?">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </button>
+      <button type="button" class="icon-btn" id="themeBtn" title="Theme">
+        <svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="14.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="15.5" r="2.5"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section id="landing">
+  <section class="hero">
+    <div class="hero-eyebrow"><b>Free · no signup · no server</b></div>
+    <h1>Your HTML,<br>now a <em>real APK.</em></h1>
+    <p class="hero-sub">
+      Upload any HTML project. CtoA wraps it in a native Android WebView with <b>full file upload support</b>, builds it in the cloud via your own GitHub repo, and hands you a real APK. <b>No SDK. No Android Studio. No terminal.</b>
+    </p>
+    <div class="hero-features">
+      <span class="hero-feature"><b>100%</b> browser-based</span>
+      <span class="hero-feature"><b>0</b> servers</span>
+      <span class="hero-feature"><b>3 min</b> per build</span>
+      <span class="hero-feature"><b>free</b> forever</span>
+    </div>
+  </section>
+
+  <div class="conn-banner hidden" id="connBanner">
+    <div class="conn-icon" id="connIcon">...</div>
+    <div class="conn-text">
+      <h4 id="connTitle">Not connected</h4>
+      <p id="connSub">add your GitHub token to start</p>
+    </div>
+    <button type="button" class="conn-action hidden" id="reconnectBtn">Reconnect</button>
+  </div>
+
+  <div class="steps-nav" id="stepsNav">
+    <button type="button" class="step-pill active" data-step="1"><span class="num">01</span>connect</button>
+    <button type="button" class="step-pill" data-step="2"><span class="num">02</span>your code</button>
+    <button type="button" class="step-pill" data-step="3"><span class="num">03</span>build</button>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h2 id="cardTitle"><b>Step 1</b> · Connect GitHub</h2>
+      <span class="hint" id="cardHint">one-time · 2 minutes</span>
+    </div>
+    <div class="card-body">
+
+      <!-- PANEL 1: CONNECT -->
+      <div class="panel active" data-panel="1">
+        <div class="setup-hero">
+          <h3>First time here? Two minutes of setup.</h3>
+          <p>
+            CtoA uses <b>GitHub</b> to build your APK — free, unlimited, no account limits. You need a <b>Personal Access Token</b> so CtoA can create a private repo for your builds.
+          </p>
+          <a class="link-btn" href="https://github.com/settings/tokens/new" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            Open GitHub token page
+          </a>
+        </div>
+
+        <ol class="setup-steps">
+          <li>Click the button above. It opens GitHub's token page.</li>
+          <li>Give it a name like <code>ctoa</code>. Set expiration to <b>No expiration</b>.</li>
+          <li>Under <b>Select scopes</b>, check only <code>repo</code> and <code>workflow</code>.</li>
+          <li>Click <b>Generate token</b> at the bottom.</li>
+          <li>Copy the token. It starts with <code>ghp_</code>.</li>
+          <li>Paste it below with your username. Done forever.</li>
+        </ol>
+
+        <div style="margin-top:22px">
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label"><b>GitHub username</b></label>
+              <input type="text" class="input" id="ghUser" placeholder="yourusername" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="field">
+              <label class="field-label"><b>Backend repo name</b><span class="opt">auto-created</span></label>
+              <input type="text" class="input" id="ghRepo" value="ctoa-builds" autocomplete="off" spellcheck="false">
+              <p class="hint-text">CtoA will create this repo if it does not exist.</p>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label"><b>Personal Access Token</b></label>
+            <input type="password" class="input" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
+          </div>
+
+          <div class="field">
+            <label class="field-label"><b>Repo visibility</b></label>
+            <select class="input" id="ghVisibility">
+              <option value="true" selected>Private (recommended)</option>
+              <option value="false">Public (allows direct APK download)</option>
+            </select>
+            <p class="hint-text">Private repos are invisible to others. Public repos allow direct download without browser restrictions.</p>
+          </div>
+
+          <div class="privacy-note">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span><b>Your token stays in this browser.</b> It is stored in <code>localStorage</code> on your device. CtoA never sends it anywhere except <code>api.github.com</code>. No analytics, no tracking, no third-party servers.</span>
+          </div>
+
+          <button type="button" class="btn dark" id="connectBtn" style="margin-top:16px">
+            <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            Connect to GitHub
+          </button>
+        </div>
+      </div>
+
+      <!-- PANEL 2: CODE -->
+      <div class="panel" data-panel="2">
+        <div class="drop-zone" id="codeDrop">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <h3>Drop your HTML project</h3>
+          <p>Accepted: <code>.zip</code> · <code>.html</code> · or a folder. Max 40 MB.</p>
+          <span class="hint">click to browse</span>
+          <input type="file" id="codeInput" accept=".zip,.html,.htm,application/zip,text/html" hidden>
+          <input type="file" id="codeFolderInput" webkitdirectory directory multiple hidden>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+          <button type="button" class="btn-mini" id="pickCodeBtn">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Choose ZIP / HTML
+          </button>
+          <button type="button" class="btn-mini" id="pickFolderBtn">
+            <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            Choose folder
+          </button>
+          <button type="button" class="btn-mini" id="useSampleBtn">
+            <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Load sample
+          </button>
+        </div>
+
+        <div class="filelist hidden" id="fileList"></div>
+
+        <div class="sanitizer-report hidden" id="sanitizerReport">
+          <div class="sanitizer-head" id="sanitizerHead">
+            <span>sanitizer report</span>
+            <span style="display:flex;align-items:center;gap:10px">
+              <span class="count" id="sanitizerCount">0 fixes</span>
+              <svg class="chev" width="12" height="12" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+          <div class="sanitizer-body" id="sanitizerBody"></div>
+        </div>
+
+        <div class="field-row" style="margin-top:18px">
+          <div class="field">
+            <label class="field-label"><b>Entry file</b><span class="opt">main HTML</span></label>
+            <select class="input" id="entryFile"></select>
+          </div>
+          <div class="field">
+            <label class="field-label"><b>App name</b></label>
+            <input type="text" class="input" id="appName" value="My App" maxlength="40">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label"><b>Package ID</b></label>
+            <input type="text" class="input" id="packageId" value="com.ctoa.myapp">
+          </div>
+          <div class="field">
+            <label class="field-label"><b>Version</b></label>
+            <input type="text" class="input" id="versionName" value="1.0.0">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label"><b>App icon</b></label>
+          <div class="icon-picker">
+            <div class="icon-preview" id="iconPreview"></div>
+            <div class="icon-actions">
+              <button type="button" class="btn-mini" id="iconUploadBtn">
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload PNG
+              </button>
+              <button type="button" class="btn-mini" id="iconRegenBtn">
+                <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                Regenerate
+              </button>
+              <input type="file" id="iconInput" accept="image/png,image/jpeg" hidden>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label"><b>Icon background</b></label>
+            <div class="color-row">
+              <input type="color" class="color-input" id="iconBg" value="#0f0c08">
+              <input type="text" class="input color-hex" id="iconBgHex" value="#0F0C08">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label"><b>Icon accent</b></label>
+            <div class="color-row">
+              <input type="color" class="color-input" id="iconFg" value="#ffb84a">
+              <input type="text" class="input color-hex" id="iconFgHex" value="#FFB84A">
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-preview">
+          <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <div class="phone-screen"><iframe id="previewFrame" sandbox="allow-scripts allow-modals allow-forms allow-popups allow-same-origin allow-downloads"></iframe></div>
+            <div class="phone-home"></div>
+          </div>
+        </div>
+
+        <button type="button" class="btn" id="step2Next" disabled>
+          Continue to build
+          <svg viewBox="0 0 24 24" class="arrow"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+
+      <!-- PANEL 3: BUILD -->
+      <div class="panel" data-panel="3">
+        <div style="text-align:center;padding:10px 0">
+          <p style="font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:1.05rem;color:var(--ink-2);margin-bottom:8px">
+            Ready to build.
+          </p>
+          <p style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--ink-3);letter-spacing:.04em">
+            about 2-4 minutes · sanitize, push, cloud build, download
+          </p>
+        </div>
+
+        <div class="build-stats">
+          <div class="build-stat"><span class="v" id="statFiles">0</span><span class="l">files</span></div>
+          <div class="build-stat"><span class="v" id="statName">-</span><span class="l">app</span></div>
+          <div class="build-stat"><span class="v" id="statPkg">-</span><span class="l">package</span></div>
+        </div>
+
+        <button type="button" class="btn dark" id="buildBtn" style="margin-top:20px">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Build APK now
+        </button>
+
+        <button type="button" class="btn-mini" id="step3Back" style="width:100%;margin-top:10px;padding:10px">
+          <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back to code
+        </button>
+
+        <div class="build-stage hidden" id="buildStage">
+          <div class="build-header">
+            <div class="build-orb" id="buildOrb">
+              <svg viewBox="0 0 60 60"><circle class="ring-bg" cx="30" cy="30" r="27"/><circle class="ring-fg" cx="30" cy="30" r="27" id="ringFg"/></svg>
+              <span class="gear" id="buildGear">&#9680;</span>
+            </div>
+            <div class="build-meta">
+              <h4 id="buildTitle">Preparing...</h4>
+              <p id="buildSubtitle">this usually takes 2-4 minutes</p>
+            </div>
+          </div>
+
+          <div class="build-progress"><div class="build-progress-bar" id="buildProgress"></div></div>
+
+          <div class="build-steps" id="buildSteps">
+            <div class="build-step" data-step="sanitize"><span class="check">&#9675;</span><span>sanitizing project files</span></div>
+            <div class="build-step" data-step="generate"><span class="check">&#9675;</span><span>generating android project</span></div>
+            <div class="build-step" data-step="push"><span class="check">&#9675;</span><span>pushing to your GitHub repo</span></div>
+            <div class="build-step" data-step="trigger"><span class="check">&#9675;</span><span>triggering cloud build</span></div>
+            <div class="build-step" data-step="compile"><span class="check">&#9675;</span><span>compiling APK (gradle)</span></div>
+            <div class="build-step" data-step="release"><span class="check">&#9675;</span><span>publishing release</span></div>
+            <div class="build-step" data-step="download"><span class="check">&#9675;</span><span>downloading APK</span></div>
+          </div>
+
+          <div class="build-log" id="buildLog"></div>
+
+          <div class="build-success hidden" id="buildSuccess">
+            <svg viewBox="0 0 72 72">
+              <circle cx="36" cy="36" r="32" fill="none" stroke="currentColor" stroke-width="3" opacity=".25"/>
+              <path class="check-path" d="M22 37 L32 47 L50 27" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h4>Your APK is ready.</h4>
+            <p id="apkMeta">app.apk · 0 MB</p>
+            <button type="button" class="btn" id="downloadApkBtn" style="max-width:360px">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Save APK
+            </button>
+            <a id="directDownloadLink" target="_blank" rel="noopener" class="btn-mini" style="margin-top:12px;padding:10px 16px;text-decoration:none;display:none">
+              Or open on GitHub
+            </a>
+            <button type="button" class="btn-mini" id="newBuildBtn" style="margin-top:12px;padding:10px 16px">
+              <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              Build another
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-brand">CtoA — <b>code to app.</b></span>
+    <span>MIT License · by MC88</span>
+  </div>
+</footer>
+
+<div class="guide-back" id="guideBack"></div>
+<div class="guide-panel" id="guidePanel" role="dialog">
+  <header class="guide-head">
+    <div>
+      <h2>How to use <b>CtoA</b></h2>
+      <p>code to app · by MC88</p>
+    </div>
+    <button type="button" class="guide-close" id="guideClose">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </header>
+  <div class="guide-body">
+    <p class="guide-lead">
+      CtoA turns an HTML project into a real Android APK. Everything runs in your browser. You set up GitHub once, then every build is <b>upload, click, download</b>.
+    </p>
+
+    <div class="guide-section">
+      <h3>One-time setup (2 minutes)</h3>
+      <ol class="guide-steps">
+        <li>Create an account at <a href="https://github.com/signup" target="_blank" rel="noopener">github.com/signup</a> if you do not have one.</li>
+        <li>Go to <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener">github.com/settings/tokens/new</a>.</li>
+        <li>Name it <code>ctoa</code>. Expiration: <b>No expiration</b>.</li>
+        <li>Check only these scopes: <code>repo</code> and <code>workflow</code>.</li>
+        <li>Click <b>Generate token</b>. Copy it (starts with <code>ghp_</code>).</li>
+        <li>Paste the token in CtoA. Done forever.</li>
+      </ol>
+    </div>
+
+    <div class="guide-section">
+      <h3>Every build</h3>
+      <ol class="guide-steps">
+        <li>Upload your project (<code>.zip</code> · <code>.html</code> · folder).</li>
+        <li>Review the sanitizer report. It fixes common issues automatically.</li>
+        <li>Set the app name, package ID, icon.</li>
+        <li>Click <b>Build APK now</b>.</li>
+        <li>Wait 2-4 minutes. The APK downloads automatically.</li>
+      </ol>
+    </div>
+
+    <div class="guide-section">
+      <h3>File uploads inside your app</h3>
+      <ol class="guide-steps">
+        <li>Any <code>&lt;input type="file"&gt;</code> in your HTML works inside the built APK.</li>
+        <li>Single and multiple file selection both supported.</li>
+        <li>Camera capture via <code>accept="image/*" capture</code> works too.</li>
+        <li>Runtime storage permissions are requested automatically on first use.</li>
+        <li>Downloads triggered by your app land in the Downloads folder.</li>
+      </ol>
+    </div>
+
+    <div class="guide-section">
+      <h3>How it works behind the scenes</h3>
+      <ol class="guide-steps">
+        <li>Your HTML is sanitized in the browser (junk removed, paths fixed).</li>
+        <li>CtoA generates a complete Android Studio project.</li>
+        <li>The project is pushed to your private GitHub repo via the GitHub API.</li>
+        <li>GitHub Actions detects the push and starts building.</li>
+        <li>Gradle compiles the APK in the cloud (2-4 minutes).</li>
+        <li>The workflow publishes the APK as a GitHub Release.</li>
+        <li>CtoA downloads it and hands it to you.</li>
+      </ol>
+    </div>
+
+    <div class="guide-section">
+      <h3>Updates without uninstalling</h3>
+      <ol class="guide-steps">
+        <li>The workflow uses a <b>persistent debug keystore</b>.</li>
+        <li>Every new build is signed with the same key.</li>
+        <li>You can install updates over the old version. No need to uninstall.</li>
+        <li>Keep the same <code>packageId</code> between builds.</li>
+      </ol>
+    </div>
+
+    <div class="guide-section">
+      <h3>Privacy and security</h3>
+      <ol class="guide-steps">
+        <li><b>Your code never touches our servers.</b> There are no servers.</li>
+        <li>The token is stored in your browser's <code>localStorage</code>.</li>
+        <li>Every request goes only to <code>api.github.com</code>.</li>
+        <li>You can revoke the token anytime from GitHub settings.</li>
+        <li>No analytics. No tracking. No ads. No third parties.</li>
+      </ol>
+    </div>
+
+    <div class="guide-section">
+      <h3>Free tier limits</h3>
+      <ol class="guide-steps">
+        <li><b>Private repos</b>: 2,000 build-minutes per month, about 660 builds.</li>
+        <li><b>Public repos</b>: unlimited build-minutes.</li>
+        <li>Each build takes 2-4 minutes.</li>
+        <li>Old releases are cleaned automatically (10 latest kept).</li>
+      </ol>
+    </div>
+
+    <div class="guide-section">
+      <h3>What is inside the APK</h3>
+      <ol class="guide-steps">
+        <li>A native Android <b>WebView activity</b> that loads your HTML.</li>
+        <li>Everything runs offline. Your HTML, CSS, JS, images are bundled.</li>
+        <li>Auto-rotate, back button, external links open in browser.</li>
+        <li>Full file upload support: single, multiple, camera.</li>
+        <li>Works on Android 7.0 and above (minSdk 24).</li>
+        <li>Debug-signed. Perfect for personal use. Not for Play Store.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ============================================================
+   NATIVE BRIDGE DETECTION
+   The Android wrapper injects window.AndroidBridge with:
+     getVersion() -> string
+     notify(title, body) -> void
+     saveAPK(base64, filename) -> void
+     openExternal(url) -> void
+   On the web this object is undefined and we fall back to
+   browser APIs.
+   ============================================================ */
+const NATIVE = (typeof window.AndroidBridge !== 'undefined' && window.AndroidBridge !== null);
+const IS_ANDROID = NATIVE && typeof window.AndroidBridge.getVersion === 'function';
+
+if (IS_ANDROID) {
+  try {
+    const tag = document.getElementById('brandTag');
+    if (tag) tag.textContent = 'apk v' + window.AndroidBridge.getVersion();
+  } catch(e){}
+}
+
+/* ============================================================
+   THEMES
+   ============================================================ */
+const THEMES = [
+  { id:'forge',    name:'Forge',    color:'#0f0c08' },
+  { id:'cobalt',   name:'Cobalt',   color:'#080f1a' },
+  { id:'phosphor', name:'Phosphor', color:'#060906' },
+  { id:'rose',     name:'Rose',     color:'#180a10' },
+  { id:'bone',     name:'Bone',     color:'#f4ebdc' }
+];
+
+const $ = (s,r=document) => r.querySelector(s);
+const $$ = (s,r=document) => Array.from(r.querySelectorAll(s));
+const rootEl = document.documentElement;
+const themeColor = $('#themeColor');
+const toastEl = $('#toast');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+let toastTimer;
+function showToast(msg, cls){
+  toastEl.textContent = msg;
+  toastEl.className = 'toast' + (cls ? ' ' + cls : '');
+  void toastEl.offsetWidth;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2600);
+}
+
+/* ============================================================
+   THEME MANAGEMENT
+   ============================================================ */
+function applyTheme(id){
+  rootEl.dataset.theme = id;
+  const t = THEMES.find(x => x.id === id);
+  if (t) themeColor.setAttribute('content', t.color);
+  try { localStorage.setItem('ctoa.theme', id); } catch(e){}
+}
+try {
+  const s = localStorage.getItem('ctoa.theme');
+  if (s && THEMES.some(t => t.id === s)) rootEl.dataset.theme = s;
+} catch(e){}
+const curT = THEMES.find(t => t.id === rootEl.dataset.theme);
+if (curT) themeColor.setAttribute('content', curT.color);
+$('#themeBtn').addEventListener('click', () => {
+  const i = THEMES.findIndex(t => t.id === rootEl.dataset.theme);
+  const next = THEMES[(i + 1) % THEMES.length];
+  applyTheme(next.id);
+  showToast('theme · ' + next.name);
+});
+
+/* ============================================================
+   NATIVE HELPERS
+   ============================================================ */
+function nativeNotify(title, body){
+  if (IS_ANDROID && window.AndroidBridge.notify) {
+    try { window.AndroidBridge.notify(title, body); return; } catch(e){}
+  }
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try { new Notification(title, { body }); return; } catch(e){}
+  }
+  showToast(title + ' · ' + body);
+}
+
+function blobToBase64(blob){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function saveAPK(blob, filename){
+  if (!blob) return false;
+  if (IS_ANDROID && window.AndroidBridge.saveAPK) {
+    try {
+      showToast('saving to Downloads...');
+      const b64 = await blobToBase64(blob);
+      window.AndroidBridge.saveAPK(b64, filename);
+      nativeNotify('APK saved', filename);
+      return true;
+    } catch(e){ /* fall through */ }
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  showToast('APK saved · ' + filename, 'ok');
+  return true;
+}
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  conn: { user:'', token:'', repo:'ctoa-builds', private:true },
+  userFiles: {},
+  sanitized: null,
+  entryFile: 'index.html',
+  iconDataUrl: null,
+  apkBlob: null,
+  apkName: '',
+  apkBrowserUrl: ''
+};
+
+const CONN_KEY = 'ctoa.connection';
+function saveConn(){ try { localStorage.setItem(CONN_KEY, JSON.stringify(state.conn)); } catch(e){} }
+function loadConn(){
+  try {
+    const c = JSON.parse(localStorage.getItem(CONN_KEY) || '{}');
+    if (c.user) $('#ghUser').value = c.user;
+    if (c.repo) $('#ghRepo').value = c.repo;
+    if (c.token) $('#ghToken').value = c.token;
+    if (typeof c.private === 'boolean') $('#ghVisibility').value = String(c.private);
+    if (c.user) state.conn.user = c.user;
+    if (c.token) state.conn.token = c.token;
+    if (c.repo) state.conn.repo = c.repo;
+    if (typeof c.private === 'boolean') state.conn.private = c.private;
+  } catch(e){}
+}
+
+/* ============================================================
+   SANITIZER
+   Detects and fixes common issues that break APK builds.
+   ============================================================ */
+const JUNK_PATTERNS = [
+  /^__MACOSX\//i, /\/__MACOSX\//i,
+  /^\.DS_Store$/, /\/\.DS_Store$/,
+  /^Thumbs\.db$/i, /\/Thumbs\.db$/i,
+  /^desktop\.ini$/i, /\/desktop\.ini$/i,
+  /^\.git(\/|$)/, /\/\.git\//,
+  /^node_modules(\/|$)/, /\/node_modules\//,
+  /^\.svn(\/|$)/, /^\.hg(\/|$)/,
+  /^\.vscode(\/|$)/, /^\.idea(\/|$)/
+];
+
+function isTextFile(path){
+  return /\.(html?|css|js|mjs|json|txt|xml|md|markdown|svg|webmanifest)$/i.test(path);
+}
+
+function sanitizeProject(){
+  const fixes = [];
+  const warnings = [];
+  const cleaned = {};
+  let totalBytes = 0;
+
+  for (const [rawPath, file] of Object.entries(state.userFiles)){
+    let path = rawPath;
+
+    if (JUNK_PATTERNS.some(p => p.test(path))){
+      fixes.push({ kind:'removed', text: path + ' - system file' });
+      continue;
+    }
+    if (path.includes('\\')){
+      const fixed = path.replace(/\\/g, '/');
+      fixes.push({ kind:'path', text: rawPath + ' -> ' + fixed });
+      path = fixed;
+    }
+    const collapsed = path.replace(/\/+/g, '/').replace(/^\/+/, '');
+    if (collapsed !== path) path = collapsed;
+
+    const parts = path.split('/').filter(Boolean);
+    const cleanParts = parts.map(seg => {
+      let s = seg;
+      if (/\s/.test(s)) s = s.replace(/\s+/g, '_');
+      s = s.replace(/[^\w.\-]/g, '_');
+      return s;
+    });
+    const newPath = cleanParts.join('/');
+    if (newPath !== path){
+      fixes.push({ kind:'renamed', text: path + ' -> ' + newPath });
+      path = newPath;
+    }
+
+    if (file.content !== undefined){
+      let content = file.content;
+
+      if (content.charCodeAt(0) === 0xFEFF){
+        content = content.slice(1);
+        fixes.push({ kind:'cleaned', text: path + ' - stripped UTF-8 BOM' });
+      }
+
+      if (/\.(html?|css)$/i.test(path)){
+        const before = content;
+        content = content.replace(/<base\b[^>]*>/gi, '');
+        content = content.replace(
+          /(href|src|action|poster|data-src|srcset)\s*=\s*(["'])\/(?!\/)([^"']+)\2/gi,
+          (m, attr, q, rest) => attr + '=' + q + rest + q
+        );
+        content = content.replace(
+          /url\(\s*(["']?)\/(?!\/)([^"')]+)\1\s*\)/gi,
+          (m, q, rest) => 'url(' + q + rest + q + ')'
+        );
+        content = content.replace(
+          /(href|src)\s*=\s*(["'])([^"']*\\[^"']*)\2/gi,
+          (m, attr, q, val) => attr + '=' + q + val.replace(/\\/g, '/') + q
+        );
+        if (content !== before){
+          fixes.push({ kind:'cleaned', text: path + ' - path fixes applied' });
+        }
+      }
+
+      if (/\.html?$/i.test(path)){
+        if (!/<meta[^>]+charset/i.test(content)){
+          if (/<head[^>]*>/i.test(content)){
+            content = content.replace(/<head[^>]*>/i, m => m + '\n<meta charset="utf-8">');
+          } else if (/<html[^>]*>/i.test(content)){
+            content = content.replace(/<html[^>]*>/i, m => m + '\n<head><meta charset="utf-8"></head>');
+          } else {
+            content = '<meta charset="utf-8">\n' + content;
+          }
+          fixes.push({ kind:'cleaned', text: path + ' - added utf-8 charset' });
+        }
+      }
+
+      cleaned[path] = { content };
+      totalBytes += new Blob([content]).size;
+    } else if (file.blob){
+      cleaned[path] = { blob: file.blob };
+      totalBytes += file.blob.size;
+    }
+  }
+
+  // Case conflicts can break Android asset merging
+  const lowerMap = {};
+  for (const p of Object.keys(cleaned)){
+    const lower = p.toLowerCase();
+    if (lowerMap[lower] && lowerMap[lower] !== p){
+      warnings.push('Case conflict: "' + lowerMap[lower] + '" vs "' + p + '"');
+    }
+    lowerMap[lower] = p;
+  }
+
+  if (totalBytes > 40 * 1024 * 1024){
+    warnings.push('Project is ' + (totalBytes / 1024 / 1024).toFixed(1) + ' MB - build may be slow');
+  }
+
+  const htmls = Object.keys(cleaned).filter(k => /\.html?$/i.test(k));
+  let entry = state.entryFile;
+  if (!cleaned[entry]){
+    entry = htmls.find(h => h === 'index.html')
+         || htmls.find(h => !h.includes('/'))
+         || htmls[0]
+         || null;
+    if (entry) fixes.push({ kind:'entry', text: state.entryFile + ' -> ' + entry });
+  }
+  if (!htmls.length) warnings.push('No HTML file found in project');
+
+  return { cleaned, fixes, warnings, entry };
+}
+
+function renderSanitizerReport(result){
+  const report = $('#sanitizerReport');
+  const body = $('#sanitizerBody');
+  const count = $('#sanitizerCount');
+  if (!result || (result.fixes.length === 0 && result.warnings.length === 0)){
+    report.classList.add('hidden');
+    return;
+  }
+  report.classList.remove('hidden');
+  count.textContent = result.fixes.length + ' fixes'
+    + (result.warnings.length ? ' · ' + result.warnings.length + ' warnings' : '');
+  let html = '';
+  result.fixes.forEach(f => {
+    const badge = { removed:'removed', path:'path', renamed:'renamed', cleaned:'cleaned', entry:'entry' }[f.kind] || 'fix';
+    html += '<div class="sanitizer-item"><span class="badge">' + badge + '</span><span class="text">' + esc(f.text) + '</span></div>';
+  });
+  result.warnings.forEach(w => {
+    html += '<div class="sanitizer-item warn"><span class="badge">warning</span><span class="text">' + esc(w) + '</span></div>';
+  });
+  body.innerHTML = html;
+}
+
+$('#sanitizerHead').addEventListener('click', () => {
+  $('#sanitizerReport').classList.toggle('open');
+});
+
+/* ============================================================
+   CONNECTION UI
+   ============================================================ */
+function updateConnUI(status, detail){
+  const banner = $('#connBanner');
+  const icon = $('#connIcon');
+  const dot = $('#connDot');
+  const reconnect = $('#reconnectBtn');
+  if (status === 'ready'){
+    banner.classList.remove('hidden');
+    banner.className = 'conn-banner ready';
+    icon.textContent = 'OK';
+    $('#connTitle').textContent = 'Connected to GitHub';
+    $('#connSub').textContent = state.conn.user + ' / ' + state.conn.repo;
+    dot.className = 'dot';
+    reconnect.classList.add('hidden');
+    $('#step2Next').disabled = !Object.keys(state.userFiles).length;
+  } else if (status === 'pending'){
+    banner.classList.remove('hidden');
+    banner.className = 'conn-banner pending';
+    icon.textContent = '...';
+    $('#connTitle').textContent = detail || 'Connecting...';
+    $('#connSub').textContent = 'verifying token';
+    dot.className = 'dot pending';
+    reconnect.classList.add('hidden');
+  } else if (status === 'error'){
+    banner.classList.remove('hidden');
+    banner.className = 'conn-banner error';
+    icon.textContent = 'X';
+    $('#connTitle').textContent = 'Connection failed';
+    $('#connSub').textContent = detail || 'check your token';
+    dot.className = 'dot off';
+    reconnect.classList.remove('hidden');
+  } else {
+    banner.classList.add('hidden');
+    dot.className = 'dot off';
+  }
+}
+
+/* ============================================================
+   GITHUB API
+   ============================================================ */
+async function gh(path, opts = {}, retries = 4){
+  let lastErr;
+  for (let i = 0; i < retries; i++){
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 45000);
+      const res = await fetch('https://api.github.com' + path, {
+        ...opts,
+        signal: controller.signal,
+        headers: {
+          'Authorization': 'Bearer ' + state.conn.token,
+          'Accept': 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28',
+          ...(opts.headers || {})
+        }
+      });
+      clearTimeout(timeout);
+      if (res.ok) return res;
+      if (res.status === 401){
+        throw new Error('TOKEN INVALID - create a fresh one at github.com/settings/tokens/new');
+      }
+      if (res.status === 403){
+        const ra = res.headers.get('Retry-After');
+        throw new Error('GitHub 403 rate limited' + (ra ? ' - retry in ' + ra + 's' : ''));
+      }
+      const text = await res.text();
+      let msg = text;
+      try { const j = JSON.parse(text); msg = j.message || text; } catch(e){}
+      const err = new Error('GitHub ' + res.status + ': ' + msg);
+      err.status = res.status;
+      throw err;
+    } catch(err){
+      lastErr = err;
+      const isNetwork = err.name === 'TypeError' || err.name === 'AbortError' || /fetch|network/i.test(err.message);
+      if (isNetwork && i < retries - 1){
+        const wait = 1500 * Math.pow(2, i);
+        await new Promise(r => setTimeout(r, wait));
+        continue;
+      }
+      if (isNetwork) throw new Error('NETWORK - GitHub unreachable after ' + retries + ' attempts');
+      throw err;
+    }
+  }
+  throw lastErr;
+}
+
+async function checkUser(){
+  const res = await gh('/user');
+  const data = await res.json();
+  return data.login;
+}
+
+async function ensureRepo(){
+  const { user, repo, private: isPrivate } = state.conn;
+  try {
+    await gh('/repos/' + user + '/' + repo);
+    return { created: false };
+  } catch(err){
+    if (err.status !== 404) throw err;
+    await gh('/user/repos', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: repo,
+        description: 'CtoA builds',
+        private: isPrivate,
+        auto_init: true,
+        has_issues: false,
+        has_wiki: false
+      })
+    });
+    await new Promise(r => setTimeout(r, 2500));
+    return { created: true };
+  }
+}
+
+async function ensureWorkflowUpToDate(){
+  const { user, repo } = state.conn;
+  const path = '.github/workflows/build-apk.yml';
+  let existingSha = null;
+  try {
+    const res = await gh('/repos/' + user + '/' + repo + '/contents/' + path);
+    const data = await res.json();
+    existingSha = data.sha;
+    const existing = atob(data.content.replace(/\n/g, ''));
+    if (existing === WORKFLOW_YAML) return false;
+  } catch(err){
+    if (err.status !== 404) throw err;
+  }
+  const body = {
+    message: 'CtoA: sync build workflow',
+    content: btoa(unescape(encodeURIComponent(WORKFLOW_YAML))),
+    branch: 'main'
+  };
+  if (existingSha) body.sha = existingSha;
+  await gh('/repos/' + user + '/' + repo + '/contents/' + path, {
+    method: 'PUT',
+    body: JSON.stringify(body)
+  });
+  return true;
+}
+
+async function pushFiles(filesMap, commitMessage){
+  const { user, repo } = state.conn;
+  logLine('  - testing GitHub connectivity...', 'dim');
+  await gh('/rate_limit');
+  logLine('  OK GitHub reachable', 'ok');
+
+  let baseSha = null;
+  try {
+    const res = await gh('/repos/' + user + '/' + repo + '/git/ref/heads/main');
+    const data = await res.json();
+    baseSha = data.object.sha;
+    logLine('  - base commit ' + baseSha.slice(0,7), 'dim');
+  } catch(err){
+    if (err.status === 404){
+      logLine('  - repo is empty, creating initial commit', 'dim');
+    } else throw err;
+  }
+
+  const tree = [];
+  const paths = Object.keys(filesMap);
+  logLine('  - uploading ' + paths.length + ' files...', 'dim');
+
+  for (let i = 0; i < paths.length; i++){
+    const path = paths[i];
+    const content = filesMap[path];
+    const isBinary = typeof content !== 'string';
+    let b64;
+    if (isBinary) b64 = bytesToBase64(content);
+    else b64 = btoa(unescape(encodeURIComponent(content)));
+
+    let lastErr = null;
+    for (let attempt = 0; attempt < 3; attempt++){
+      try {
+        const res = await gh('/repos/' + user + '/' + repo + '/git/blobs', {
+          method: 'POST',
+          body: JSON.stringify({ content: b64, encoding: 'base64' })
+        });
+        const data = await res.json();
+        tree.push({ path, mode: '100644', type: 'blob', sha: data.sha });
+        lastErr = null;
+        break;
+      } catch(err){
+        lastErr = err;
+        if (attempt < 2){
+          await new Promise(r => setTimeout(r, 1500 * (attempt + 1)));
+        }
+      }
+    }
+    if (lastErr) throw new Error('failed on ' + path + ': ' + lastErr.message);
+
+    if ((i+1) % 3 === 0 || i === paths.length - 1){
+      logLine('    ' + (i+1) + '/' + paths.length + ' uploaded', 'dim');
+      setProgress(22 + Math.round(((i+1) / paths.length) * 8));
+    }
+    if (i < paths.length - 1) await new Promise(r => setTimeout(r, 60));
+  }
+
+  const treeRes = await gh('/repos/' + user + '/' + repo + '/git/trees', {
+    method: 'POST',
+    body: JSON.stringify({ tree })
+  });
+  const treeData = await treeRes.json();
+
+  const commitRes = await gh('/repos/' + user + '/' + repo + '/git/commits', {
+    method: 'POST',
+    body: JSON.stringify({
+      message: commitMessage,
+      tree: treeData.sha,
+      parents: baseSha ? [baseSha] : []
+    })
+  });
+  const commitData = await commitRes.json();
+
+  if (baseSha){
+    await gh('/repos/' + user + '/' + repo + '/git/refs/heads/main', {
+      method: 'PATCH',
+      body: JSON.stringify({ sha: commitData.sha, force: true })
+    });
+  } else {
+    try {
+      await gh('/repos/' + user + '/' + repo + '/git/refs', {
+        method: 'POST',
+        body: JSON.stringify({ ref: 'refs/heads/main', sha: commitData.sha })
+      });
+    } catch(err){
+      await gh('/repos/' + user + '/' + repo + '/git/refs/heads/main', {
+        method: 'PATCH',
+        body: JSON.stringify({ sha: commitData.sha, force: true })
+      });
+    }
+  }
+  return commitData.sha;
+}
+
+function bytesToBase64(bytes){
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+
+/* ============================================================
+   WORKFLOW YAML
+   Includes persistent keystore so updates don't require
+   uninstalling the previous version.
+   ============================================================ */
+const WORKFLOW_YAML = `name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'project/**'
+      - '.github/workflows/build-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: \${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Configure Android SDK (preinstalled)
+        run: |
+          SDK="/usr/local/lib/android/sdk"
+          echo "ANDROID_HOME=\$SDK" >> \$GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=\$SDK" >> \$GITHUB_ENV
+          echo "\$SDK/cmdline-tools/latest/bin" >> \$GITHUB_PATH
+          echo "\$SDK/platform-tools" >> \$GITHUB_PATH
+
+      - name: Install required packages
+        run: |
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+          sdkmanager --install "platform-tools" "platforms;android-34" "build-tools;34.0.0" || true
+
+      - name: Persistent debug keystore
+        run: |
+          KEYSTORE="\$GITHUB_WORKSPACE/.ctoa-debug.keystore"
+          if [ ! -f "\$KEYSTORE" ]; then
+            echo "creating new keystore (first run)"
+            keytool -genkeypair -v \\
+              -keystore "\$KEYSTORE" \\
+              -storepass android \\
+              -keypass android \\
+              -alias androiddebugkey \\
+              -keyalg RSA -keysize 2048 -validity 10000 \\
+              -dname "CN=CtoA Debug,O=CtoA,C=US"
+            git config user.email "ctoa-bot@users.noreply.github.com"
+            git config user.name "CtoA Bot"
+            git add -f "\$KEYSTORE"
+            git commit -m "CtoA: persist debug keystore [skip ci]" || true
+            git push || true
+          else
+            echo "reusing existing keystore"
+          fi
+          mkdir -p ~/.android
+          cp "\$KEYSTORE" ~/.android/debug.keystore
+
+      - name: Create local.properties
+        working-directory: project
+        run: echo "sdk.dir=\$ANDROID_HOME" > local.properties
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.2
+
+      - name: Build debug APK
+        working-directory: project
+        run: gradle assembleDebug --no-daemon --stacktrace
+
+      - name: Get short SHA
+        if: success()
+        id: vars
+        run: echo "sha=\${GITHUB_SHA::7}" >> \$GITHUB_OUTPUT
+
+      - name: Publish release
+        if: success()
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-\${{ steps.vars.outputs.sha }}
+          name: "Build \${{ steps.vars.outputs.sha }}"
+          files: project/app/build/outputs/apk/debug/*.apk
+          make_latest: true
+
+      - name: Cleanup old releases
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release list --repo \${{ github.repository }} --limit 100 --json tagName --jq '.[10:] | .[].tagName' | while read -r tag; do
+            [ -n "\$tag" ] && gh release delete "\$tag" --repo \${{ github.repository }} --yes --cleanup-tag || true
+          done
+`;
+
+/* ============================================================
+   ANDROID PROJECT GENERATORS
+   ============================================================ */
+function sanitizePkg(p){
+  let out = String(p).toLowerCase().replace(/[^a-z0-9.]/g, '');
+  out = out.replace(/^\.+|\.+$/g, '').replace(/\.+/g, '.');
+  if (!/^[a-z]/.test(out)) out = 'a' + out;
+  if (out.split('.').length < 2) out = 'com.ctoa.' + (out.replace(/\./g,'') || 'app');
+  return out;
+}
+
+function escapeXml(s){
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+function drawIcon(size, letter, bg, fg){
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, size, size);
+  const grad = ctx.createRadialGradient(size/2, size*0.4, 0, size/2, size/2, size*0.85);
+  grad.addColorStop(0, 'rgba(255,255,255,.10)');
+  grad.addColorStop(1, 'rgba(0,0,0,.18)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, size, size);
+  ctx.fillStyle = fg;
+  ctx.font = 'bold ' + (size * 0.54) + 'px Georgia, "Times New Roman", serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(letter, size/2, size/2 + size*0.04);
+  return c.toDataURL('image/png');
+}
+
+async function resizeIconB64(b64, size){
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = c.height = size;
+      const ctx = c.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, 0, 0, size, size);
+      resolve(c.toDataURL('image/png').split(',')[1]);
+    };
+    img.onerror = () => resolve(b64);
+    img.src = 'data:image/png;base64,' + b64;
+  });
+}
+
+function genRootGradle(){
+  return "plugins {\n    id 'com.android.application' version '8.2.2' apply false\n}\n";
+}
+
+function genSettings(cfg){
+  return 'pluginManagement{repositories{google();mavenCentral();gradlePluginPortal()}}\n'
+    + 'dependencyResolutionManagement{repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS);repositories{google();mavenCentral()}}\n'
+    + 'rootProject.name = "' + cfg.appName.replace(/"/g,'') + '"\n'
+    + "include ':app'\n";
+}
+
+function genGradleProps(){
+  return 'org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8\n'
+    + 'android.useAndroidX=true\n'
+    + 'android.nonTransitiveRClass=true\n';
+}
+
+function genAppGradle(cfg){
+  return "plugins { id 'com.android.application' }\n"
+    + "android {\n"
+    + "    namespace '" + cfg.packageId + "'\n"
+    + "    compileSdk 34\n"
+    + "    defaultConfig {\n"
+    + "        applicationId \"" + cfg.packageId + "\"\n"
+    + "        minSdk 24\n"
+    + "        targetSdk 34\n"
+    + "        versionCode " + cfg.versionCode + "\n"
+    + "        versionName \"" + cfg.versionName + "\"\n"
+    + "    }\n"
+    + "    buildTypes {\n"
+    + "        release { minifyEnabled false }\n"
+    + "        debug { applicationIdSuffix \".debug\" }\n"
+    + "    }\n"
+    + "    compileOptions {\n"
+    + "        sourceCompatibility JavaVersion.VERSION_17\n"
+    + "        targetCompatibility JavaVersion.VERSION_17\n"
+    + "    }\n"
+    + "}\n"
+    + "dependencies {\n"
+    + "    implementation 'androidx.appcompat:appcompat:1.6.1'\n"
+    + "    implementation 'androidx.webkit:webkit:1.10.0'\n"
+    + "}\n";
+}
+
+function genManifest(cfg){
+  return '<?xml version="1.0" encoding="utf-8"?>\n'
+    + '<manifest xmlns:android="http://schemas.android.com/apk/res/android">\n'
+    + '    <uses-permission android:name="android.permission.INTERNET" />\n'
+    + '    <uses-permission android:name="android.permission.VIBRATE" />\n'
+    + '    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />\n'
+    + '    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />\n'
+    + '    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />\n'
+    + '    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />\n'
+    + '    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />\n'
+    + '    <uses-permission android:name="android.permission.CAMERA" />\n'
+    + '    <uses-feature android:name="android.hardware.camera" android:required="false" />\n'
+    + '    <application\n'
+    + '        android:allowBackup="true"\n'
+    + '        android:icon="@mipmap/ic_launcher"\n'
+    + '        android:label="@string/app_name"\n'
+    + '        android:roundIcon="@mipmap/ic_launcher"\n'
+    + '        android:supportsRtl="true"\n'
+    + '        android:usesCleartextTraffic="true"\n'
+    + '        android:hardwareAccelerated="true"\n'
+    + '        android:requestLegacyExternalStorage="true"\n'
+    + '        android:theme="@style/AppTheme">\n'
+    + '        <activity\n'
+    + '            android:name=".MainActivity"\n'
+    + '            android:exported="true"\n'
+    + '            android:configChanges="orientation|screenSize|keyboardHidden|uiMode|smallestScreenSize|screenLayout">\n'
+    + '            <intent-filter>\n'
+    + '                <action android:name="android.intent.action.MAIN" />\n'
+    + '                <category android:name="android.intent.category.LAUNCHER" />\n'
+    + '            </intent-filter>\n'
+    + '        </activity>\n'
+    + '    </application>\n'
+    + '</manifest>\n';
+}
+
+/* ------------------------------------------------------------
+   MAIN ACTIVITY
+   The most important file in the whole project for the user.
+   This is what makes <input type="file"> actually work inside
+   the generated APK. Every WebView gotcha is handled here.
+   ------------------------------------------------------------ */
+function genMainActivity(cfg){
+  return 'package ' + cfg.packageId + ';\n'
++ '\n'
++ 'import android.Manifest;\n'
++ 'import android.annotation.SuppressLint;\n'
++ 'import android.app.Activity;\n'
++ 'import android.app.AlertDialog;\n'
++ 'import android.content.ClipData;\n'
++ 'import android.content.Intent;\n'
++ 'import android.content.pm.PackageManager;\n'
++ 'import android.net.Uri;\n'
++ 'import android.os.Build;\n'
++ 'import android.os.Bundle;\n'
++ 'import android.os.Environment;\n'
++ 'import android.provider.MediaStore;\n'
++ 'import android.view.KeyEvent;\n'
++ 'import android.view.View;\n'
++ 'import android.view.ViewGroup;\n'
++ 'import android.view.WindowManager;\n'
++ 'import android.webkit.ConsoleMessage;\n'
++ 'import android.webkit.CookieManager;\n'
++ 'import android.webkit.GeolocationPermissions;\n'
++ 'import android.webkit.JavascriptInterface;\n'
++ 'import android.webkit.PermissionRequest;\n'
++ 'import android.webkit.ValueCallback;\n'
++ 'import android.webkit.WebChromeClient;\n'
++ 'import android.webkit.WebResourceRequest;\n'
++ 'import android.webkit.WebSettings;\n'
++ 'import android.webkit.WebView;\n'
++ 'import android.webkit.WebViewClient;\n'
++ 'import android.widget.FrameLayout;\n'
++ 'import android.widget.Toast;\n'
++ '\n'
++ 'import java.io.File;\n'
++ 'import java.util.ArrayList;\n'
++ 'import java.util.List;\n'
++ '\n'
++ 'public class MainActivity extends Activity {\n'
++ '\n'
++ '    private static final int REQ_FILE_CHOOSER = 1001;\n'
++ '    private static final int REQ_PERMISSIONS  = 2001;\n'
++ '\n'
++ '    private WebView webView;\n'
++ '    private ValueCallback<Uri[]> filePathCallback;\n'
++ '    private Uri cameraOutputUri;\n'
++ '\n'
++ '    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})\n'
++ '    @Override\n'
++ '    protected void onCreate(Bundle savedInstanceState) {\n'
++ '        super.onCreate(savedInstanceState);\n'
++ '        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);\n'
++ '\n'
++ '        webView = new WebView(this);\n'
++ '        webView.setLayoutParams(new FrameLayout.LayoutParams(\n'
++ '            ViewGroup.LayoutParams.MATCH_PARENT,\n'
++ '            ViewGroup.LayoutParams.MATCH_PARENT));\n'
++ '\n'
++ '        WebSettings s = webView.getSettings();\n'
++ '        // Core capabilities. Every one of these matters for app-like HTML.\n'
++ '        s.setJavaScriptEnabled(true);\n'
++ '        s.setDomStorageEnabled(true);\n'
++ '        s.setDatabaseEnabled(true);\n'
++ '        s.setAllowFileAccess(true);\n'
++ '        s.setAllowContentAccess(true);\n'
++ '        // The two flags below are CRITICAL for file uploads and modern JS.\n'
++ '        // Without them, libraries that read local files silently fail and\n'
++ '        // <input type="file"> appears to do nothing on many pages.\n'
++ '        s.setAllowFileAccessFromFileURLs(true);\n'
++ '        s.setAllowUniversalAccessFromFileURLs(true);\n'
++ '        s.setLoadWithOverviewMode(true);\n'
++ '        s.setUseWideViewPort(true);\n'
++ '        s.setSupportZoom(false);\n'
++ '        s.setBuiltInZoomControls(false);\n'
++ '        s.setDisplayZoomControls(false);\n'
++ '        s.setMediaPlaybackRequiresUserGesture(false);\n'
++ '        s.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);\n'
++ '        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {\n'
++ '            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);\n'
++ '        }\n'
++ '        CookieManager.getInstance().setAcceptCookie(true);\n'
++ '\n'
++ '        // JS bridge for saveAPK / notify from the web layer.\n'
++ '        webView.addJavascriptInterface(new AndroidBridge(), "AndroidBridge");\n'
++ '\n'
++ '        // ------------------------------------------------\n'
++ '        // WebChromeClient: THE part that makes file uploads work.\n'
++ '        // onShowFileChooser is called when the page taps an\n'
++ '        // <input type="file">. We must return true and later\n'
++ '        // feed the result back via filePathCallback.\n'
++ '        // ------------------------------------------------\n'
++ '        webView.setWebChromeClient(new WebChromeClient() {\n'
++ '            @Override\n'
++ '            public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {\n'
++ '                if (filePathCallback != null) {\n'
++ '                    filePathCallback.onReceiveValue(null);\n'
++ '                    filePathCallback = null;\n'
++ '                }\n'
++ '                filePathCallback = callback;\n'
++ '                cameraOutputUri = null;\n'
++ '\n'
++ '                Intent contentIntent = params.createIntent();\n'
++ '                contentIntent.addCategory(Intent.CATEGORY_OPENABLE);\n'
++ '\n'
++ '                // Multiple selection is signaled by the file chooser params.\n'
++ '                boolean allowMultiple = false;\n'
++ '                try {\n'
++ '                    allowMultiple = params.getMode() == FileChooserParams.MODE_OPEN_MULTIPLE;\n'
++ '                } catch (Throwable t) { /* older APIs */ }\n'
++ '\n'
++ '                Intent chooser;\n'
++ '                String[] accept = params.getAcceptTypes();\n'
++ '                boolean imageOnly = accept != null && accept.length > 0;\n'
++ '                if (imageOnly) {\n'
++ '                    // Best-effort: keep only image/video MIME types so we\n'
++ '                    // can safely offer a camera option alongside the picker.\n'
++ '                    List<String> mimes = new ArrayList<>();\n'
++ '                    for (String a : accept) {\n'
++ '                        if (a == null) continue;\n'
++ '                        if (a.startsWith("image") || a.startsWith("video")) mimes.add(a);\n'
++ '                    }\n'
++ '                    if (!mimes.isEmpty()) contentIntent.setType(mimes.get(0));\n'
++ '                }\n'
++ '\n'
++ '                if (allowMultiple) contentIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);\n'
++ '\n'
++ '                chooser = Intent.createChooser(contentIntent, "Select file");\n'
++ '                try {\n'
++ '                    startActivityForResult(chooser, REQ_FILE_CHOOSER);\n'
++ '                    return true;\n'
++ '                } catch (Exception e) {\n'
++ '                    filePathCallback = null;\n'
++ '                    Toast.makeText(MainActivity.this, "No file picker available", Toast.LENGTH_SHORT).show();\n'
++ '                    return false;\n'
++ '                }\n'
++ '            }\n'
++ '\n'
++ '            // Camera + microphone permission requests from getUserMedia.\n'
++ '            @Override\n'
++ '            public void onPermissionRequest(final PermissionRequest request) {\n'
++ '                runOnUiThread(() -> {\n'
++ '                    try { request.grant(request.getResources()); }\n'
++ '                    catch (Exception e) { request.deny(); }\n'
++ '                });\n'
++ '            }\n'
++ '\n'
++ '            @Override\n'
++ '            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback cb) {\n'
++ '                cb.invoke(origin, true, false);\n'
++ '            }\n'
++ '\n'
++ '            @Override\n'
++ '            public boolean onConsoleMessage(ConsoleMessage cm) {\n'
++ '                android.util.Log.d("CtoA-WebView", cm.message() + " @ " + cm.sourceId() + ":" + cm.lineNumber());\n'
++ '                return true;\n'
++ '            }\n'
++ '\n'
++ '            @Override\n'
++ '            public boolean onJsAlert(WebView v, String u, String m, final android.webkit.JsResult r) {\n'
++ '                new AlertDialog.Builder(MainActivity.this)\n'
++ '                    .setMessage(m)\n'
++ '                    .setPositiveButton(android.R.string.ok, (d, w) -> r.confirm())\n'
++ '                    .setCancelable(false)\n'
++ '                    .show();\n'
++ '                return true;\n'
++ '            }\n'
++ '\n'
++ '            @Override\n'
++ '            public boolean onJsConfirm(WebView v, String u, String m, final android.webkit.JsResult r) {\n'
++ '                new AlertDialog.Builder(MainActivity.this)\n'
++ '                    .setMessage(m)\n'
++ '                    .setPositiveButton(android.R.string.ok, (d, w) -> r.confirm())\n'
++ '                    .setNegativeButton(android.R.string.cancel, (d, w) -> r.cancel())\n'
++ '                    .setCancelable(false)\n'
++ '                    .show();\n'
++ '                return true;\n'
++ '            }\n'
++ '        });\n'
++ '\n'
++ '        // External links open in the system browser.\n'
++ '        webView.setWebViewClient(new WebViewClient() {\n'
++ '            @Override\n'
++ '            public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r) {\n'
++ '                Uri uri = r.getUrl();\n'
++ '                String scheme = uri.getScheme();\n'
++ '                if ("http".equals(scheme) || "https".equals(scheme)) {\n'
++ '                    if (uri.toString().startsWith("file://")) return false;\n'
++ '                    try {\n'
++ '                        startActivity(new Intent(Intent.ACTION_VIEW, uri));\n'
++ '                        return true;\n'
++ '                    } catch (Exception e) { return false; }\n'
++ '                }\n'
++ '                return false;\n'
++ '            }\n'
++ '        });\n'
++ '\n'
++ '        FrameLayout root = new FrameLayout(this);\n'
++ '        root.addView(webView);\n'
++ '        setContentView(root);\n'
++ '\n'
++ '        requestRuntimePermissions();\n'
++ '        webView.loadUrl("file:///android_asset/' + cfg.entryFile + '");\n'
++ '    }\n'
++ '\n'
++ '    // ------------------------------------------------------------\n'
++ '    // File chooser result. Handles single files, multiple files,\n'
++ '    // and camera-captured images uniformly.\n'
++ '    // ------------------------------------------------------------\n'
++ '    @Override\n'
++ '    protected void onActivityResult(int requestCode, int resultCode, Intent data){\n'
++ '        if (requestCode == REQ_FILE_CHOOSER){\n'
++ '            if (filePathCallback == null){\n'
++ '                super.onActivityResult(requestCode, resultCode, data);\n'
++ '                return;\n'
++ '            }\n'
++ '            Uri[] results = null;\n'
++ '            if (resultCode == Activity.RESULT_OK){\n'
++ '                if (data == null || (data.getData() == null && data.getClipData() == null)){\n'
++ '                    if (cameraOutputUri != null) results = new Uri[]{ cameraOutputUri };\n'
++ '                } else if (data.getClipData() != null){\n'
++ '                    ClipData clip = data.getClipData();\n'
++ '                    results = new Uri[clip.getItemCount()];\n'
++ '                    for (int i = 0; i < clip.getItemCount(); i++){\n'
++ '                        results[i] = clip.getItemAt(i).getUri();\n'
++ '                    }\n'
++ '                } else if (data.getData() != null){\n'
++ '                    results = new Uri[]{ data.getData() };\n'
++ '                }\n'
++ '            }\n'
++ '            filePathCallback.onReceiveValue(results);\n'
++ '            filePathCallback = null;\n'
++ '            cameraOutputUri = null;\n'
++ '            return;\n'
++ '        }\n'
++ '        super.onActivityResult(requestCode, resultCode, data);\n'
++ '    }\n'
++ '\n'
++ '    // ------------------------------------------------------------\n'
++ '    // Runtime permissions. Different on each Android version.\n'
++ '    // ------------------------------------------------------------\n'
++ '    private void requestRuntimePermissions(){\n'
++ '        List<String> needed = new ArrayList<>();\n'
++ '\n'
++ '        if (Build.VERSION.SDK_INT >= 33){\n'
++ '            if (!hasPermission("android.permission.READ_MEDIA_IMAGES")) needed.add("android.permission.READ_MEDIA_IMAGES");\n'
++ '            if (!hasPermission("android.permission.READ_MEDIA_VIDEO"))  needed.add("android.permission.READ_MEDIA_VIDEO");\n'
++ '            if (!hasPermission("android.permission.READ_MEDIA_AUDIO"))  needed.add("android.permission.READ_MEDIA_AUDIO");\n'
++ '        } else if (Build.VERSION.SDK_INT >= 23){\n'
++ '            if (!hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE))  needed.add(Manifest.permission.READ_EXTERNAL_STORAGE);\n'
++ '            if (!hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) && Build.VERSION.SDK_INT <= 28){\n'
++ '                needed.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);\n'
++ '            }\n'
++ '        }\n'
++ '        if (Build.VERSION.SDK_INT >= 23 && !hasPermission(Manifest.permission.CAMERA)){\n'
++ '            needed.add(Manifest.permission.CAMERA);\n'
++ '        }\n'
++ '        if (!needed.isEmpty()){\n'
++ '            requestPermissions(needed.toArray(new String[0]), REQ_PERMISSIONS);\n'
++ '        }\n'
++ '    }\n'
++ '\n'
++ '    private boolean hasPermission(String p){\n'
++ '        return checkSelfPermission(p) == PackageManager.PERMISSION_GRANTED;\n'
++ '    }\n'
++ '\n'
++ '    @Override\n'
++ '    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){\n'
++ '        super.onRequestPermissionsResult(requestCode, permissions, grantResults);\n'
++ '        if (requestCode == REQ_PERMISSIONS){\n'
++ '            for (int i = 0; i < permissions.length; i++){\n'
++ '                if (grantResults[i] != PackageManager.PERMISSION_GRANTED){\n'
++ '                    android.util.Log.w("CtoA", "permission denied: " + permissions[i]);\n'
++ '                }\n'
++ '            }\n'
++ '        }\n'
++ '    }\n'
++ '\n'
++ '    @Override\n'
++ '    public boolean onKeyDown(int keyCode, KeyEvent event){\n'
++ '        if (keyCode == KeyEvent.KEYCODE_BACK && webView != null && webView.canGoBack()){\n'
++ '            webView.goBack();\n'
++ '            return true;\n'
++ '        }\n'
++ '        return super.onKeyDown(keyCode, event);\n'
++ '    }\n'
++ '\n'
++ '    @Override protected void onPause(){ super.onPause(); if (webView != null) webView.onPause(); }\n'
++ '    @Override protected void onResume(){ super.onResume(); if (webView != null) webView.onResume(); }\n'
++ '    @Override protected void onDestroy(){ if (webView != null){ webView.destroy(); webView = null; } super.onDestroy(); }\n'
++ '\n'
++ '    // ------------------------------------------------------------\n'
++ '    // JavaScript bridge. Optional helpers for CtoA-style pages.\n'
++ '    // A plain HTML app that never calls these still works fine.\n'
++ '    // ------------------------------------------------------------\n'
++ '    public class AndroidBridge {\n'
++ '\n'
++ '        @JavascriptInterface\n'
++ '        public String getVersion(){ return "1.0"; }\n'
++ '\n'
++ '        @JavascriptInterface\n'
++ '        public void notify(final String title, final String body){\n'
++ '            runOnUiThread(() -> {\n'
++ '                try { Toast.makeText(MainActivity.this, title + ": " + body, Toast.LENGTH_SHORT).show(); }\n'
++ '                catch (Exception ignored){}\n'
++ '            });\n'
++ '        }\n'
++ '\n'
++ '        @JavascriptInterface\n'
++ '        public void saveAPK(final String base64, final String filename){\n'
++ '            runOnUiThread(() -> {\n'
++ '                try {\n'
++ '                    byte[] bytes = android.util.Base64.decode(base64, android.util.Base64.DEFAULT);\n'
++ '                    String clean = filename.replaceAll("[^a-zA-Z0-9._-]", "_");\n'
++ '                    if (!clean.toLowerCase().endsWith(".apk")) clean += ".apk";\n'
++ '\n'
++ '                    java.io.File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);\n'
++ '                    if (!dir.exists()) dir.mkdirs();\n'
++ '                    java.io.File out = new java.io.File(dir, clean);\n'
++ '                    java.io.FileOutputStream fos = new java.io.FileOutputStream(out);\n'
++ '                    fos.write(bytes);\n'
++ '                    fos.close();\n'
++ '\n'
++ '                    Toast.makeText(MainActivity.this, "Saved: " + clean, Toast.LENGTH_LONG).show();\n'
++ '\n'
++ '                    try {\n'
++ '                        Uri uri = Uri.fromFile(out);\n'
++ '                        Intent install = new Intent(Intent.ACTION_VIEW);\n'
++ '                        install.setDataAndType(uri, "application/vnd.android.package-archive");\n'
++ '                        install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);\n'
++ '                        install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);\n'
++ '                        startActivity(install);\n'
++ '                    } catch (Exception e){\n'
++ '                        Toast.makeText(MainActivity.this, "Open it from Downloads", Toast.LENGTH_LONG).show();\n'
++ '                    }\n'
++ '                } catch (Exception e){\n'
++ '                    Toast.makeText(MainActivity.this, "Save failed: " + e.getMessage(), Toast.LENGTH_LONG).show();\n'
++ '                }\n'
++ '            });\n'
++ '        }\n'
++ '\n'
++ '        @JavascriptInterface\n'
++ '        public void openExternal(final String url){\n'
++ '            runOnUiThread(() -> {\n'
++ '                try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))); }\n'
++ '                catch (Exception ignored){}\n'
++ '            });\n'
++ '        }\n'
++ '    }\n'
++ '}\n';
+}
+
+function genStrings(cfg){
+  return '<?xml version="1.0" encoding="utf-8"?>\n'
+    + '<resources>\n'
+    + '    <string name="app_name">' + escapeXml(cfg.appName) + '</string>\n'
+    + '</resources>\n';
+}
+
+function genColors(cfg){
+  return '<?xml version="1.0" encoding="utf-8"?>\n'
+    + '<resources>\n'
+    + '    <color name="status_bar">' + cfg.iconBg + '</color>\n'
+    + '    <color name="accent">' + cfg.iconFg + '</color>\n'
+    + '    <color name="background">' + cfg.iconBg + '</color>\n'
+    + '</resources>\n';
+}
+
+function genStyles(){
+  return '<?xml version="1.0" encoding="utf-8"?>\n'
+    + '<resources>\n'
+    + '    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">\n'
+    + '        <item name="android:statusBarColor">@color/status_bar</item>\n'
+    + '        <item name="android:windowBackground">@color/background</item>\n'
+    + '    </style>\n'
+    + '</resources>\n';
+}
+
+function genGitignore(){
+  return '*.iml\n.gradle\n/local.properties\n/.idea\n/build\nlocal.properties\n/app/build\n*.apk\n*.aab\n*.keystore\n';
+}
+
+function genReadme(cfg){
+  return '# ' + cfg.appName + '\n\n'
+    + 'Generated by CtoA.\n\n'
+    + '- Package: `' + cfg.packageId + '`\n'
+    + '- Version: ' + cfg.versionName + '\n'
+    + '- Entry: `app/src/main/assets/' + cfg.entryFile + '`\n';
+}
+
+async function generateProject(sanitized){
+  const cfg = {
+    appName: $('#appName').value.trim() || 'My App',
+    packageId: sanitizePkg($('#packageId').value || 'com.ctoa.myapp'),
+    versionName: $('#versionName').value.trim() || '1.0.0',
+    versionCode: 1,
+    entryFile: sanitized.entry || state.entryFile,
+    iconBg: $('#iconBg').value || '#0f0c08',
+    iconFg: $('#iconFg').value || '#ffb84a'
+  };
+
+  const files = {};
+  files['project/build.gradle'] = genRootGradle();
+  files['project/settings.gradle'] = genSettings(cfg);
+  files['project/gradle.properties'] = genGradleProps();
+  files['project/.gitignore'] = genGitignore();
+  files['project/README.md'] = genReadme(cfg);
+  files['project/.app-info'] = cfg.appName;
+  files['project/app/build.gradle'] = genAppGradle(cfg);
+  files['project/app/proguard-rules.pro'] = '# CtoA\n';
+  files['project/app/src/main/AndroidManifest.xml'] = genManifest(cfg);
+
+  const jp = cfg.packageId.replace(/\./g, '/');
+  files['project/app/src/main/java/' + jp + '/MainActivity.java'] = genMainActivity(cfg);
+
+  files['project/app/src/main/res/values/strings.xml'] = genStrings(cfg);
+  files['project/app/src/main/res/values/colors.xml'] = genColors(cfg);
+  files['project/app/src/main/res/values/styles.xml'] = genStyles();
+
+  const iconB64 = (state.iconDataUrl || drawIcon(512, (cfg.appName[0] || 'A').toUpperCase(), cfg.iconBg, cfg.iconFg)).split(',')[1];
+  const sizes = { mdpi:48, hdpi:72, xhdpi:96, xxhdpi:144, xxxhdpi:192 };
+  for (const [dpi, size] of Object.entries(sizes)){
+    const small = await resizeIconB64(iconB64, size);
+    const bin = atob(small);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    files['project/app/src/main/res/mipmap-' + dpi + '/ic_launcher.png'] = bytes;
+  }
+
+  for (const [path, f] of Object.entries(sanitized.cleaned)){
+    const outPath = 'project/app/src/main/assets/' + path;
+    if (f.content !== undefined) files[outPath] = f.content;
+    else if (f.blob){
+      const buf = await f.blob.arrayBuffer();
+      files[outPath] = new Uint8Array(buf);
+    }
+  }
+
+  files['.github/workflows/build-apk.yml'] = WORKFLOW_YAML;
+  return { cfg, files };
+}
+
+/* ============================================================
+   BUILD LOG HELPERS
+   ============================================================ */
+function logLine(text, cls){
+  const log = $('#buildLog');
+  if (!log) return;
+  const div = document.createElement('div');
+  div.className = 'line' + (cls ? ' ' + cls : '');
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+function setStep(name, status){
+  const el = document.querySelector('[data-step="' + name + '"]');
+  if (!el) return;
+  el.classList.remove('active', 'done');
+  const check = el.querySelector('.check');
+  if (status === 'active'){ el.classList.add('active'); check.textContent = '\u25D0'; }
+  else if (status === 'done'){ el.classList.add('done'); check.textContent = '\u2713'; }
+}
+function setProgress(p){
+  $('#buildProgress').style.width = Math.max(0, Math.min(100, p)) + '%';
+  const ring = $('#ringFg');
+  if (ring) ring.style.strokeDashoffset = (170 * (1 - p/100)).toFixed(1);
+}
+function setTitle(main, sub){
+  $('#buildTitle').textContent = main;
+  if (sub !== undefined) $('#buildSubtitle').textContent = sub;
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ============================================================
+   BUILD PIPELINE
+   ============================================================ */
+async function buildAPK(){
+  if (!state.conn.token || !state.conn.user){ showToast('connect GitHub first', 'err'); return; }
+  if (!Object.keys(state.userFiles).length){ showToast('no HTML files loaded', 'err'); return; }
+
+  const stage = $('#buildStage');
+  const success = $('#buildSuccess');
+  stage.classList.remove('hidden', 'done', 'error');
+  success.classList.add('hidden');
+  $('#buildLog').innerHTML = '';
+  $('#buildOrb').className = 'build-orb';
+  ['sanitize','generate','push','trigger','compile','release','download'].forEach(s => setStep(s, 'idle'));
+
+  const start = Date.now();
+  let commitSha = null;
+
+  try {
+    setStep('sanitize', 'active');
+    setTitle('Sanitizing project...', 'scanning for common build issues');
+    setProgress(2);
+    logLine('> sanitizing project files');
+    await sleep(150);
+    const sanitized = sanitizeProject();
+    state.sanitized = sanitized;
+    logLine('  ' + Object.keys(sanitized.cleaned).length + ' files after cleanup', 'dim');
+    if (sanitized.fixes.length === 0){
+      logLine('  OK nothing to fix, project is clean', 'ok');
+    } else {
+      logLine('  OK ' + sanitized.fixes.length + ' fixes applied:', 'ok');
+      sanitized.fixes.forEach(f => logLine('    - ' + f.text, 'fix'));
+    }
+    if (sanitized.warnings.length){
+      sanitized.warnings.forEach(w => logLine('  ! ' + w, 'warn'));
+    }
+    if (!sanitized.entry) throw new Error('no HTML entry file found after sanitization');
+    setStep('sanitize', 'done');
+    setProgress(8);
+    await sleep(120);
+
+    setStep('generate', 'active');
+    setTitle('Generating Android project...', 'building the structure in your browser');
+    setProgress(10);
+    logLine('');
+    logLine('> generating android project');
+    const { cfg, files } = await generateProject(sanitized);
+    logLine('  ' + Object.keys(files).length + ' files ready', 'dim');
+    logLine('  package · ' + cfg.packageId, 'dim');
+    logLine('  entry   · ' + cfg.entryFile, 'dim');
+    setStep('generate', 'done');
+    setProgress(20);
+    await sleep(150);
+
+    setStep('push', 'active');
+    setTitle('Pushing to GitHub...', 'uploading ' + Object.keys(files).length + ' files');
+    logLine('');
+    logLine('> pushing to ' + state.conn.user + '/' + state.conn.repo);
+    try {
+      commitSha = await pushFiles(files, 'CtoA build · ' + cfg.appName + ' · ' + new Date().toISOString());
+    } catch(pushErr){
+      logLine('FAIL push failed', 'err');
+      logLine('  reason: ' + pushErr.message, 'err');
+      if (/TOKEN INVALID/.test(pushErr.message)){
+        logLine('', 'dim');
+        logLine('  -> Your token is invalid or expired', 'warn');
+        logLine('  -> Create a new one at github.com/settings/tokens/new', 'warn');
+        logLine('  -> Scopes needed: repo + workflow', 'warn');
+      } else if (/NETWORK/.test(pushErr.message)){
+        logLine('', 'dim');
+        logLine('  -> GitHub was unreachable from your browser', 'warn');
+        logLine('  -> Check your internet connection', 'warn');
+      }
+      throw pushErr;
+    }
+    logLine('OK pushed as ' + commitSha.slice(0, 7), 'ok');
+    setStep('push', 'done');
+    setProgress(32);
+
+    setStep('trigger', 'active');
+    setTitle('Starting cloud build...', 'GitHub Actions is picking up the job');
+    logLine('');
+    logLine('> waiting for workflow to start');
+    let runId = null;
+    const since = Date.now() - 15000;
+    for (let i = 0; i < 40; i++){
+      await sleep(3000);
+      try {
+        const res = await gh('/repos/' + state.conn.user + '/' + state.conn.repo + '/actions/runs?per_page=5');
+        const data = await res.json();
+        const run = (data.workflow_runs || []).find(r => new Date(r.created_at).getTime() > since);
+        if (run){
+          runId = run.id;
+          logLine('OK workflow started · run #' + run.run_number, 'ok');
+          logLine('  ' + run.html_url, 'dim');
+          break;
+        }
+      } catch(e){}
+      if (i % 3 === 2) logLine('  ... still waiting', 'dim');
+    }
+    if (!runId) throw new Error('workflow did not start within 2 minutes');
+    setStep('trigger', 'done');
+    setProgress(44);
+
+    setStep('compile', 'active');
+    setTitle('Compiling APK...', 'Gradle is building your app in the cloud');
+    logLine('');
+    logLine('> compiling (this takes 2-4 min)');
+    let concluded = false;
+    let conclusion = null;
+    for (let i = 0; i < 90; i++){
+      await sleep(4000);
+      try {
+        const res = await gh('/repos/' + state.conn.user + '/' + state.conn.repo + '/actions/runs/' + runId);
+        const run = await res.json();
+        const elapsed = Math.round((Date.now() - start) / 1000);
+        setTitle('Compiling APK...', elapsed + 's elapsed · running');
+        const pct = 44 + Math.min(40, (i * 4) / 90 * 40);
+        setProgress(pct);
+        if (i % 4 === 3) logLine('  ... building (' + elapsed + 's)', 'dim');
+        if (run.status === 'completed'){ concluded = true; conclusion = run.conclusion; break; }
+      } catch(e){}
+    }
+    if (!concluded) throw new Error('build timed out after 6 minutes');
+    if (conclusion !== 'success'){
+      logLine('FAIL build ' + conclusion, 'err');
+      logLine('');
+      logLine('  full logs: https://github.com/' + state.conn.user + '/' + state.conn.repo + '/actions/runs/' + runId, 'dim');
+      throw new Error('build failed, see GitHub logs');
+    }
+    logLine('OK compilation succeeded', 'ok');
+    setStep('compile', 'done');
+    setProgress(84);
+
+    setStep('release', 'active');
+    setTitle('Reading release...', 'fetching APK from GitHub Releases');
+    logLine('');
+    logLine('> fetching release for ' + commitSha.slice(0, 7));
+    let apkUrl = null;
+    let apkName = 'app-debug.apk';
+    for (let i = 0; i < 15; i++){
+      try {
+        const res = await gh('/repos/' + state.conn.user + '/' + state.conn.repo + '/releases');
+        const releases = await res.json();
+        const target = releases.find(r => r.tag_name && r.tag_name.includes(commitSha.slice(0, 7))) || releases[0];
+        if (target && target.assets && target.assets.length){
+          const apk = target.assets.find(a => a.name.endsWith('.apk'));
+          if (apk){
+            apkUrl = apk.url;
+            state.apkBrowserUrl = apk.browser_download_url;
+            apkName = apk.name;
+            logLine('OK release ready · ' + apk.name + ' (' + (apk.size/1024/1024).toFixed(2) + ' MB)', 'ok');
+            break;
+          }
+        }
+      } catch(e){}
+      await sleep(2000);
+    }
+    if (!apkUrl) throw new Error('APK not found in releases');
+    setStep('release', 'done');
+    setProgress(92);
+
+    setStep('download', 'active');
+    setTitle('Downloading APK...', 'fetching from GitHub Releases');
+    logLine('');
+    logLine('> downloading APK');
+
+    let blob = null;
+    let downloadUrl = state.apkBrowserUrl || apkUrl;
+
+    try {
+      logLine('  - trying direct URL...', 'dim');
+      const dlRes = await fetch(downloadUrl, { redirect: 'follow' });
+      if (dlRes.ok){
+        blob = await dlRes.blob();
+        logLine('  OK fetched ' + (blob.size/1024/1024).toFixed(2) + ' MB', 'ok');
+      }
+    } catch(e1){
+      logLine('  - direct URL blocked (' + e1.message + ')', 'warn');
+    }
+
+    if (!blob){
+      try {
+        logLine('  - trying via API...', 'dim');
+        const dlRes = await fetch(apkUrl, {
+          headers: {
+            'Authorization': 'Bearer ' + state.conn.token,
+            'Accept': 'application/octet-stream'
+          }
+        });
+        if (dlRes.ok){
+          blob = await dlRes.blob();
+          logLine('  OK fetched via API ' + (blob.size/1024/1024).toFixed(2) + ' MB', 'ok');
+        }
+      } catch(e2){
+        logLine('  - API also blocked', 'warn');
+      }
+    }
+
+    if (!blob){
+      logLine('  - opening direct link in new tab...', 'warn');
+      window.open(downloadUrl, '_blank');
+      state.apkBlob = null;
+      state.apkName = apkName;
+      setStep('download', 'done');
+      setProgress(100);
+      const total = ((Date.now() - start) / 1000).toFixed(0);
+      setTitle('APK ready on GitHub', 'opened in new tab · ' + total + 's');
+      $('#buildOrb').className = 'build-orb done';
+      $('#buildGear').textContent = '\u2713';
+      stage.classList.add('done');
+      await sleep(400);
+      success.classList.remove('hidden');
+      $('#apkMeta').textContent = apkName + ' · ready · click the link below';
+      const directLink = $('#directDownloadLink');
+      directLink.href = downloadUrl;
+      directLink.style.display = 'inline-flex';
+      $('#downloadApkBtn').style.display = 'none';
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      showToast('opened download link', 'ok');
+      return;
+    }
+
+    state.apkBlob = blob;
+    state.apkName = apkName;
+    logLine('OK APK ready · ' + (blob.size/1024/1024).toFixed(2) + ' MB', 'ok');
+    setStep('download', 'done');
+    setProgress(100);
+
+    const total = ((Date.now() - start) / 1000).toFixed(0);
+    setTitle('APK ready!', total + 's · ' + (blob.size/1024/1024).toFixed(2) + ' MB');
+    $('#buildOrb').className = 'build-orb done';
+    $('#buildGear').textContent = '\u2713';
+    stage.classList.add('done');
+    await sleep(400);
+    success.classList.remove('hidden');
+    $('#apkMeta').textContent = apkName + ' · ' + (blob.size/1024/1024).toFixed(2) + ' MB · built in ' + total + 's';
+    $('#downloadApkBtn').style.display = '';
+    const directLink = $('#directDownloadLink');
+    directLink.href = state.apkBrowserUrl || apkUrl;
+    directLink.style.display = 'inline-flex';
+    success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    nativeNotify('CtoA · Build complete', apkName + ' is ready');
+    showToast('APK built successfully', 'ok');
+
+  } catch(err){
+    console.error(err);
+    setTitle('Build failed', err.message);
+    $('#buildOrb').className = 'build-orb error';
+    $('#buildGear').textContent = 'X';
+    stage.classList.add('error');
+    if (!/^\s*$/.test(err.message)) logLine('FAIL ' + err.message, 'err');
+    if (commitSha){
+      logLine('  check: https://github.com/' + state.conn.user + '/' + state.conn.repo + '/actions', 'dim');
+    }
+    nativeNotify('CtoA · Build failed', err.message);
+    showToast('build failed', 'err');
+  }
+}
+
+/* ============================================================
+   CONNECT BUTTON
+   ============================================================ */
+$('#connectBtn').addEventListener('click', async () => {
+  const user = $('#ghUser').value.trim();
+  const token = $('#ghToken').value.trim();
+  const repo = $('#ghRepo').value.trim() || 'ctoa-builds';
+  const isPrivate = $('#ghVisibility').value === 'true';
+  if (!user){ showToast('enter your GitHub username', 'err'); return; }
+  if (!token){ showToast('paste your token', 'err'); return; }
+
+  state.conn = { user, token, repo, private: isPrivate };
+  const btn = $('#connectBtn');
+  btn.classList.add('connecting');
+  const original = btn.innerHTML;
+  btn.innerHTML = 'Connecting...';
+  updateConnUI('pending', 'Verifying account...');
+
+  try {
+    let actualUser = user;
+    try {
+      actualUser = await checkUser();
+      if (actualUser.toLowerCase() !== user.toLowerCase()){
+        throw new Error('token belongs to ' + actualUser + ', not ' + user);
+      }
+    } catch(verifyErr){
+      if (verifyErr.message.includes('token belongs to')) throw verifyErr;
+      console.warn('Skipping verify:', verifyErr.message);
+    }
+    state.conn.user = actualUser;
+    await ensureRepo();
+    await ensureWorkflowUpToDate();
+    saveConn();
+    updateConnUI('ready');
+    showToast('connected · ' + actualUser, 'ok');
+    goStep(2);
+  } catch(err){
+    console.error(err);
+    updateConnUI('error', err.message);
+    showToast(err.message, 'err');
+  } finally {
+    btn.classList.remove('connecting');
+    btn.innerHTML = original;
+  }
+});
+
+$('#connBtn').addEventListener('click', () => {
+  if (state.conn.token){ goStep(2); showToast('connected, pick your HTML', 'ok'); }
+  else goStep(1);
+});
+
+$('#reconnectBtn').addEventListener('click', () => goStep(1));
+
+/* ============================================================
+   USER CODE HANDLING
+   ============================================================ */
+$('#pickCodeBtn').addEventListener('click', () => $('#codeInput').click());
+$('#pickFolderBtn').addEventListener('click', () => $('#codeFolderInput').click());
+$('#codeDrop').addEventListener('click', () => $('#codeInput').click());
+['dragenter','dragover'].forEach(ev => $('#codeDrop').addEventListener(ev, e => {
+  e.preventDefault();
+  $('#codeDrop').classList.add('drag');
+}));
+['dragleave','drop'].forEach(ev => $('#codeDrop').addEventListener(ev, e => {
+  e.preventDefault();
+  $('#codeDrop').classList.remove('drag');
+}));
+$('#codeDrop').addEventListener('drop', e => {
+  const f = e.dataTransfer.files[0];
+  if (f) handleCodeFile(f);
+});
+$('#codeInput').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (f) handleCodeFile(f);
+  e.target.value = '';
+});
+$('#codeFolderInput').addEventListener('change', e => {
+  const files = Array.from(e.target.files);
+  if (files.length) handleCodeFolder(files);
+  e.target.value = '';
+});
+
+$('#useSampleBtn').addEventListener('click', () => {
+  state.userFiles = {
+    'index.html': { content:
+      '<!DOCTYPE html>\n'
+    + '<html lang="en">\n'
+    + '<head>\n'
+    + '<meta charset="utf-8">\n'
+    + '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+    + '<title>Hello CtoA</title>\n'
+    + '<style>\n'
+    + 'body{font-family:system-ui;background:#0f0c08;color:#ffb84a;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center;padding:24px}\n'
+    + 'h1{font-family:Georgia,serif;font-style:italic;margin-bottom:12px}\n'
+    + 'button{padding:14px 28px;border:0;border-radius:99px;background:#ffb84a;color:#0f0c08;font-weight:600;font-size:1rem;cursor:pointer;margin:6px}\n'
+    + 'input[type=file]{display:block;margin:16px auto;color:#f0e0c0}\n'
+    + '#c{margin-top:12px;font-size:.9rem;opacity:.7}\n'
+    + '</style>\n'
+    + '</head>\n'
+    + '<body>\n'
+    + '<div>\n'
+    + '<h1>It works.</h1>\n'
+    + '<button id="b">Tap me</button>\n'
+    + '<input type="file" id="f" multiple>\n'
+    + '<p id="c"></p>\n'
+    + '</div>\n'
+    + '<script>\n'
+    + 'let n=0;\n'
+    + 'document.getElementById("b").addEventListener("click",()=>{n++;document.getElementById("c").textContent=n+" taps"});\n'
+    + 'document.getElementById("f").addEventListener("change",(e)=>{\n'
+    + '  const files = Array.from(e.target.files||[]);\n'
+    + '  document.getElementById("c").textContent = files.length ? files.map(f=>f.name).join(", ") : "no file selected";\n'
+    + '});\n'
+    + '<\\/script>\n'
+    + '</body>\n'
+    + '</html>'
+    }
+  };
+  state.entryFile = 'index.html';
+  $('#appName').value = 'Sample App';
+  $('#packageId').value = 'com.ctoa.sampleapp';
+  runSanitize();
+  renderFileList(); buildEntrySelect(); updatePreview(); regenerateIcon();
+  $('#step2Next').disabled = false;
+  showToast('sample loaded');
+});
+
+async function handleCodeFile(file){
+  const name = file.name.toLowerCase();
+
+  if (name.endsWith('.html') || name.endsWith('.htm')){
+    const text = await file.text();
+    state.userFiles = {};
+    state.userFiles[file.name] = { content: text };
+    state.entryFile = file.name;
+    const base = file.name.replace(/\.html?$/i, '').replace(/[^a-z0-9]+/gi, ' ').trim() || 'My App';
+    $('#appName').value = base.split(' ').map(w => w[0].toUpperCase() + w.slice(1)).join(' ').slice(0, 40);
+    $('#packageId').value = 'com.ctoa.' + file.name.replace(/\.html?$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 20);
+    runSanitize();
+    renderFileList(); buildEntrySelect(); updatePreview(); regenerateIcon();
+    $('#step2Next').disabled = false;
+    return;
+  }
+
+  if (name.endsWith('.7z')){
+    showToast('.7z not supported, convert to .zip', 'err');
+    return;
+  }
+
+  if (name.endsWith('.zip')){
+    try {
+      showToast('extracting...');
+      const zip = await JSZip.loadAsync(file);
+      state.userFiles = {};
+      const promises = [];
+      zip.forEach((path, entry) => {
+        if (entry.dir) return;
+        promises.push(entry.async('blob').then(blob => {
+          if (isTextFile(path)){
+            return blob.text().then(t => { state.userFiles[path] = { content: t }; });
+          }
+          state.userFiles[path] = { blob: new File([blob], path.split('/').pop(), { type: blob.type }) };
+        }));
+      });
+      await Promise.all(promises);
+      const htmls = Object.keys(state.userFiles).filter(k => /\.html?$/i.test(k));
+      const entry = htmls.find(k => k === 'index.html' || k === 'Index.html')
+                 || htmls.find(k => !k.includes('/'))
+                 || htmls[0];
+      if (!entry){ showToast('no HTML file in archive', 'err'); return; }
+      state.entryFile = entry;
+      const zipBase = file.name.replace(/\.zip$/i, '').replace(/[^a-z0-9]+/gi, ' ').trim() || 'My App';
+      $('#appName').value = zipBase.split(' ').map(w => w[0].toUpperCase() + w.slice(1)).join(' ').slice(0, 40);
+      $('#packageId').value = 'com.ctoa.' + zipBase.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 20);
+      runSanitize();
+      renderFileList(); buildEntrySelect(); updatePreview(); regenerateIcon();
+      $('#step2Next').disabled = false;
+      showToast('extracted · ' + Object.keys(state.userFiles).length + ' files', 'ok');
+    } catch(err){
+      showToast('zip error · ' + err.message, 'err');
+    }
+    return;
+  }
+
+  showToast('unsupported file type', 'err');
+}
+
+function handleCodeFolder(files){
+  state.userFiles = {};
+  const tasks = [];
+  for (const f of files){
+    let path = f.webkitRelativePath || f.name;
+    const parts = path.split('/');
+    if (parts.length > 1) path = parts.slice(1).join('/');
+    if (isTextFile(path)){
+      tasks.push(f.text().then(t => { state.userFiles[path] = { content: t }; }));
+    } else {
+      state.userFiles[path] = { blob: f };
+    }
+  }
+  Promise.all(tasks).then(() => {
+    const htmls = Object.keys(state.userFiles).filter(k => /\.html?$/i.test(k));
+    const entry = htmls.find(k => k === 'index.html')
+               || htmls.find(k => !k.includes('/'))
+               || htmls[0];
+    if (!entry){ showToast('no HTML file found', 'err'); return; }
+    state.entryFile = entry;
+    $('#appName').value = 'My App';
+    $('#packageId').value = 'com.ctoa.myapp';
+    runSanitize();
+    renderFileList(); buildEntrySelect(); updatePreview(); regenerateIcon();
+    $('#step2Next').disabled = false;
+    showToast('folder loaded · ' + Object.keys(state.userFiles).length + ' files', 'ok');
+  });
+}
+
+function runSanitize(){
+  state.sanitized = sanitizeProject();
+  if (state.sanitized.entry) state.entryFile = state.sanitized.entry;
+  renderSanitizerReport(state.sanitized);
+}
+
+function renderFileList(){
+  const list = $('#fileList');
+  const paths = Object.keys(state.userFiles).sort();
+  if (!paths.length){ list.classList.add('hidden'); return; }
+  list.classList.remove('hidden');
+  list.innerHTML = paths.slice(0, 200).map(p => {
+    const f = state.userFiles[p];
+    const size = f.content ? f.content.length : (f.blob ? f.blob.size : 0);
+    const isEntry = p === state.entryFile;
+    return '<div class="file-item' + (isEntry ? ' entry' : '') + '">'
+      + '<span class="ico">' + fileIcon(p) + '</span>'
+      + '<span class="fname">' + esc(p) + '</span>'
+      + '<span class="fsize">' + formatSize(size) + '</span>'
+      + '</div>';
+  }).join('');
+}
+
+function fileIcon(name){
+  const ext = (name.split('.').pop() || '').toLowerCase();
+  return ({
+    html:'H', htm:'H',
+    css:'C', js:'J', mjs:'J',
+    json:'{}', svg:'S',
+    md:'M', txt:'T', xml:'X',
+    png:'I', jpg:'I', jpeg:'I', gif:'I', webp:'I', ico:'I'
+  })[ext] || '.';
+}
+
+function formatSize(n){
+  if (n < 1024) return n + ' B';
+  if (n < 1024*1024) return (n/1024).toFixed(1) + ' KB';
+  return (n/1024/1024).toFixed(1) + ' MB';
+}
+
+function buildEntrySelect(){
+  const sel = $('#entryFile');
+  const htmls = Object.keys(state.userFiles).filter(k => /\.html?$/i.test(k)).sort();
+  sel.innerHTML = htmls.map(h => '<option value="' + esc(h) + '"' + (h === state.entryFile ? ' selected' : '') + '>' + esc(h) + '</option>').join('');
+  sel.onchange = () => {
+    state.entryFile = sel.value;
+    updatePreview();
+    renderFileList();
+  };
+}
+
+async function updatePreview(){
+  const entry = state.entryFile;
+  if (!entry || !state.userFiles[entry]) return;
+  let html = state.userFiles[entry].content;
+  const base = entry.includes('/') ? entry.slice(0, entry.lastIndexOf('/')) : '';
+
+  html = html.replace(/<link\b[^>]*?>/gi, tag => {
+    if (!/rel\s*=\s*["']?stylesheet/i.test(tag)) return tag;
+    const m = tag.match(/href\s*=\s*["']([^"']+)["']/i);
+    if (!m) return tag;
+    const p = resolvePath(m[1], base);
+    if (p && state.userFiles[p] && state.userFiles[p].content){
+      return '<style>\n' + state.userFiles[p].content + '\n</style>';
+    }
+    return tag;
+  });
+
+  html = html.replace(/<script\b([^>]*)><\/script>/gi, (full, attrs) => {
+    const m = attrs.match(/src\s*=\s*["']([^"']+)["']/i);
+    if (!m) return full;
+    const p = resolvePath(m[1], base);
+    if (p && state.userFiles[p] && state.userFiles[p].content){
+      const clean = attrs.replace(/\ssrc\s*=\s*["'][^"']+["']/i, '');
+      return '<script' + clean + '>\n' + state.userFiles[p].content + '\n<\/script>';
+    }
+    return full;
+  });
+
+  const urls = {};
+  for (const [p, f] of Object.entries(state.userFiles)){
+    if (f.blob) urls[p] = URL.createObjectURL(f.blob);
+  }
+  html = html.replace(/(src|href|poster|data-src)\s*=\s*["']([^"']+)["']/gi, (full, attr, val) => {
+    const p = resolvePath(val, base);
+    if (p && urls[p]) return attr + '="' + urls[p] + '"';
+    return full;
+  });
+
+  $('#previewFrame').srcdoc = html;
+}
+
+function resolvePath(href, base){
+  if (!href) return '';
+  if (/^(https?:|data:|blob:|mailto:|tel:|javascript:|#|\/\/)/i.test(href)) return null;
+  href = href.split('#')[0].split('?')[0];
+  if (href.startsWith('/')) return href.slice(1);
+  const combined = (base ? base + '/' : '') + href;
+  const out = [];
+  for (const p of combined.split('/')){
+    if (p === '' || p === '.') continue;
+    if (p === '..') out.pop();
+    else out.push(p);
+  }
+  return out.join('/');
+}
+
+/* ============================================================
+   ICON
+   ============================================================ */
+function regenerateIcon(){
+  const name = $('#appName').value.trim() || 'App';
+  const letter = (name[0] || 'A').toUpperCase();
+  const bg = $('#iconBg').value || '#0f0c08';
+  const fg = $('#iconFg').value || '#ffb84a';
+  state.iconDataUrl = drawIcon(512, letter, bg, fg);
+  $('#iconPreview').innerHTML = '<img src="' + state.iconDataUrl + '" alt="icon">';
+}
+
+$('#iconUploadBtn').addEventListener('click', () => $('#iconInput').click());
+$('#iconInput').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = c.height = 512;
+      const ctx = c.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      const s = Math.max(512/img.width, 512/img.height);
+      const w = img.width * s, h = img.height * s;
+      ctx.drawImage(img, (512-w)/2, (512-h)/2, w, h);
+      state.iconDataUrl = c.toDataURL('image/png');
+      $('#iconPreview').innerHTML = '<img src="' + state.iconDataUrl + '" alt="icon">';
+      showToast('icon updated');
+    };
+    img.src = r.result;
+  };
+  r.readAsDataURL(f);
+  e.target.value = '';
+});
+$('#iconRegenBtn').addEventListener('click', regenerateIcon);
+
+function bindColor(cId, hId){
+  const c = $(cId), h = $(hId);
+  c.addEventListener('input', () => {
+    h.value = c.value.toUpperCase();
+    updatePreview();
+  });
+  h.addEventListener('input', () => {
+    const v = h.value.trim();
+    if (/^#[0-9a-f]{6}$/i.test(v)){ c.value = v; updatePreview(); }
+  });
+}
+bindColor('#iconBg', '#iconBgHex');
+bindColor('#iconFg', '#iconFgHex');
+$('#appName').addEventListener('input', regenerateIcon);
+
+/* ============================================================
+   STEP NAVIGATION
+   ============================================================ */
+function goStep(n){
+  $$('.panel[data-panel]').forEach(p => p.classList.toggle('active', +p.dataset.panel === n));
+  $$('.step-pill').forEach(p => {
+    const i = +p.dataset.step;
+    p.classList.toggle('active', i === n);
+    p.classList.toggle('done', i < n);
+  });
+  const titles = {
+    1: ['Step 1', 'Connect GitHub',     'one-time · 2 minutes'],
+    2: ['Step 2', 'Your HTML project',   'upload · configure · sanitize'],
+    3: ['Step 3', 'Build APK',           'cloud build · 2-4 minutes']
+  };
+  const [num, ttl, hint] = titles[n];
+  $('#cardTitle').innerHTML = '<b>' + num + '</b> · ' + ttl;
+  $('#cardHint').textContent = hint;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+$$('.step-pill').forEach(p => {
+  p.addEventListener('click', () => {
+    const t = +p.dataset.step;
+    if (t === 1) goStep(1);
+    else if (t === 2 && state.conn.token) goStep(2);
+    else if (t === 3 && state.conn.token && Object.keys(state.userFiles).length) goStep(3);
+  });
+});
+
+$('#step2Next').addEventListener('click', () => {
+  $('#statFiles').textContent = Object.keys(state.userFiles).length;
+  $('#statName').textContent = ($('#appName').value || 'app').slice(0, 12);
+  $('#statPkg').textContent = ($('#packageId').value || '').split('.').pop().slice(0, 12);
+  goStep(3);
+});
+$('#step3Back').addEventListener('click', () => goStep(2));
+$('#buildBtn').addEventListener('click', () => buildAPK());
+
+$('#downloadApkBtn').addEventListener('click', async () => {
+  if (!state.apkBlob) return;
+  await saveAPK(state.apkBlob, state.apkName || 'app.apk');
+});
+
+$('#newBuildBtn').addEventListener('click', () => {
+  state.userFiles = {};
+  state.sanitized = null;
+  state.entryFile = 'index.html';
+  state.apkBlob = null;
+  state.apkBrowserUrl = '';
+  $('#fileList').classList.add('hidden');
+  $('#sanitizerReport').classList.add('hidden');
+  $('#step2Next').disabled = true;
+  $('#buildStage').classList.add('hidden');
+  $('#buildSuccess').classList.add('hidden');
+  $('#downloadApkBtn').style.display = '';
+  $('#directDownloadLink').style.display = 'none';
+  goStep(2);
+});
+
+/* ============================================================
+   GUIDE
+   ============================================================ */
+const guidePanel = $('#guidePanel');
+const guideBack = $('#guideBack');
+function openGuide(){ guidePanel.classList.add('open'); guideBack.classList.add('open'); }
+function closeGuide(){ guidePanel.classList.remove('open'); guideBack.classList.remove('open'); }
+$('#helpBtn').addEventListener('click', openGuide);
+$('#guideClose').addEventListener('click', closeGuide);
+guideBack.addEventListener('click', closeGuide);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && guidePanel.classList.contains('open')) closeGuide();
+  if (e.key === '?' && !document.activeElement.matches('input,textarea')){
+    e.preventDefault();
+    if (guidePanel.classList.contains('open')) closeGuide();
+    else openGuide();
+  }
+});
+$('#brandLink').addEventListener('click', e => { e.preventDefault(); goStep(1); });
+
+/* ============================================================
+   INIT
+   ============================================================ */
+loadConn();
+updateConnUI(state.conn.token ? 'ready' : 'hidden');
+buildEntrySelect();
+regenerateIcon();
+goStep(state.conn.token ? 2 : 1);
+
+})();
+</script>
+</body>
+</html>
