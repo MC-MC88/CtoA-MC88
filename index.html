@@ -563,7 +563,7 @@ footer .dot-sep{opacity:.4;margin:0 8px}
 (function(){
 'use strict';
 
-/* where each tool lives — edit if folder names change */
+/* where each tool lives  */
 const CONFIG = {
   links: {
     ctoa: 'ctoa88.html',
@@ -677,7 +677,7 @@ $$('[data-close]').forEach(b => b.addEventListener('click', closeAbout));
 $('#aboutModal').addEventListener('click', e => { if (e.target === $('#aboutModal')) closeAbout(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAbout(); });
 
-/* warn if a tool link looks unset */
+/* warn  */
 document.addEventListener('click', e => {
   const link = e.target.closest('.tool');
   if (!link) return;
