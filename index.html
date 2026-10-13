@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="en" data-theme="graphite">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0d10" id="metaColor">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MC88 STUDIO">
+<title>MC88 STUDIO — Three tools, one launcher</title>
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230b0d10'/><circle cx='22' cy='32' r='7' fill='%23f59e0b'/><circle cx='42' cy='24' r='6' fill='%2360a5fa'/><circle cx='42' cy='44' r='6' fill='%2384cc16'/></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root,[data-theme="graphite"]{
+  --bg:#0b0d10;--bg-2:#111419;--card:#15181e;--card-2:#1b1f26;
+  --ink:#eef1f5;--ink-2:#9aa3b0;--ink-3:#5a6472;
+  --line:rgba(238,241,245,.10);--line-2:rgba(238,241,245,.05);
+  --accent:#f59e0b;--accent-2:#fbbf24;--accent-soft:rgba(245,158,11,.14);
+  --t1:#f59e0b;--t2:#60a5fa;--t3:#84cc16;
+  --grid:none;color-scheme:dark;
+}
+[data-theme="ivory"]{
+  --bg:#fbfaf6;--bg-2:#f2f0e8;--card:#ffffff;--card-2:#f7f5ee;
+  --ink:#14171c;--ink-2:#525a66;--ink-3:#9aa3b0;
+  --line:rgba(20,23,28,.10);--line-2:rgba(20,23,28,.05);
+  --accent:#c2410c;--accent-2:#ea580c;--accent-soft:rgba(194,65,12,.10);
+  --t1:#c2410c;--t2:#1d4ed8;--t3:#4d7c0f;
+  --grid:linear-gradient(rgba(20,23,28,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(20,23,28,.025) 1px,transparent 1px);
+  color-scheme:light;
+}
+[data-theme="midnight"]{
+  --bg:#050a18;--bg-2:#0a1228;--card:#0f1a34;--card-2:#142040;
+  --ink:#e0e8f8;--ink-2:#8494b8;--ink-3:#4a5878;
+  --line:rgba(224,232,248,.10);--line-2:rgba(224,232,248,.05);
+  --accent:#8b5cf6;--accent-2:#a78bfa;--accent-soft:rgba(139,92,246,.14);
+  --t1:#a78bfa;--t2:#38bdf8;--t3:#22d3ee;
+  --grid:none;color-scheme:dark;
+}
+[data-theme="ember"]{
+  --bg:#14100c;--bg-2:#1c1611;--card:#251d15;--card-2:#302619;
+  --ink:#f5e8d8;--ink-2:#b39a7c;--ink-3:#6f5c48;
+  --line:rgba(245,232,216,.12);--line-2:rgba(245,232,216,.05);
+  --accent:#f97316;--accent-2:#fb923c;--accent-soft:rgba(249,115,22,.14);
+  --t1:#f97316;--t2:#eab308;--t3:#84cc16;
+  --grid:none;color-scheme:dark;
+}
+[data-theme="slate"]{
+  --bg:#f5f7fa;--bg-2:#e9edf3;--card:#ffffff;--card-2:#f0f3f8;
+  --ink:#0f172a;--ink-2:#526078;--ink-3:#94a3b8;
+  --line:rgba(15,23,42,.10);--line-2:rgba(15,23,42,.05);
+  --accent:#0ea5e9;--accent-2:#0284c7;--accent-soft:rgba(14,165,233,.10);
+  --t1:#0ea5e9;--t2:#8b5cf6;--t3:#10b981;
+  --grid:none;color-scheme:light;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{
+  font-family:'Outfit',system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);
+  min-height:100vh;line-height:1.55;font-size:15px;
+  -webkit-font-smoothing:antialiased;
+  transition:background-color .45s ease,color .45s ease;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:var(--grid);background-size:32px 32px;
+  pointer-events:none;z-index:0;
+}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit;font-family:inherit}
+a{color:inherit;text-decoration:none}
+svg{display:block}
+.hidden{display:none !important}
+::selection{background:var(--accent);color:var(--bg)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+/* preloader */
+#preloader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:grid;place-items:center;transition:opacity .65s ease,visibility .65s ease}
+#preloader.hide{opacity:0;visibility:hidden;pointer-events:none}
+.pl-inner{display:flex;flex-direction:column;align-items:center;gap:22px}
+.pl-mark{width:64px;height:64px;position:relative}
+.pl-mark svg{width:100%;height:100%}
+.pl-mark circle{transform-origin:center;transform-box:fill-box}
+.pl-mark .c1{fill:var(--t1);animation:pulse 1.6s ease-in-out infinite}
+.pl-mark .c2{fill:var(--t2);animation:pulse 1.6s ease-in-out .2s infinite}
+.pl-mark .c3{fill:var(--t3);animation:pulse 1.6s ease-in-out .4s infinite}
+@keyframes pulse{
+  0%,100%{transform:scale(1);opacity:.7}
+  50%{transform:scale(1.25);opacity:1}
+}
+.pl-word{
+  font-family:'JetBrains Mono',monospace;font-size:.78rem;font-weight:500;
+  color:var(--ink-2);letter-spacing:.28em;text-transform:uppercase;
+}
+.pl-bar{width:150px;height:2px;background:var(--line);overflow:hidden;border-radius:2px}
+.pl-bar i{display:block;height:100%;width:40%;background:var(--accent);animation:barRun 1.5s cubic-bezier(.4,0,.6,1) infinite}
+@keyframes barRun{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+
+/* header */
+.top{
+  position:sticky;top:0;z-index:30;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line-2);
+  padding:14px 22px;padding-top:calc(14px + env(safe-area-inset-top,0));
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
+}
+@media (max-width:600px){.top{padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top,0))}}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.brand-mark{
+  width:36px;height:36px;border-radius:11px;flex-shrink:0;
+  background:var(--card);border:1px solid var(--line);
+  display:grid;place-items:center;
+  position:relative;overflow:hidden;
+}
+.brand-mark::before{
+  content:'';position:absolute;inset:0;
+  background:conic-gradient(from 90deg,var(--t1) 0deg 120deg,var(--t2) 120deg 240deg,var(--t3) 240deg 360deg);
+  opacity:.18;
+}
+.brand-mark svg{width:20px;height:20px;position:relative;z-index:1}
+.brand-mark circle{transform-origin:center;transform-box:fill-box}
+.brand-mark .c1{fill:var(--t1)}
+.brand-mark .c2{fill:var(--t2)}
+.brand-mark .c3{fill:var(--t3)}
+.brand-name{
+  font-family:'Outfit',sans-serif;font-weight:700;
+  font-size:1.05rem;letter-spacing:-.02em;line-height:1.1;
+}
+.brand-name b{color:var(--accent);font-weight:800}
+.brand-sub{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;
+  color:var(--ink-3);letter-spacing:.14em;text-transform:uppercase;
+  margin-top:2px;
+}
+@media (max-width:520px){.brand-sub{display:none}}
+.top-actions{display:flex;gap:6px;align-items:center}
+.iconbtn{
+  width:40px;height:40px;border-radius:11px;
+  display:grid;place-items:center;color:var(--ink-2);
+  background:var(--card);border:1px solid var(--line);
+  transition:all .2s cubic-bezier(.2,.8,.2,1);
+}
+.iconbtn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.iconbtn:active{transform:scale(.94) rotate(-10deg)}
+.iconbtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* main */
+main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:36px 22px 60px}
+@media (max-width:600px){main{padding:24px 16px 40px}}
+
+/* hero */
+.hero{text-align:center;margin-bottom:44px;animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:500;
+  color:var(--ink-3);letter-spacing:.18em;text-transform:uppercase;
+  margin-bottom:18px;
+}
+.hero-eyebrow::before,.hero-eyebrow::after{
+  content:'';width:24px;height:1px;background:var(--line);
+}
+.hero h1{
+  font-family:'Outfit',sans-serif;
+  font-size:clamp(2rem,5.5vw,3.2rem);
+  font-weight:700;letter-spacing:-.04em;line-height:1.05;
+  margin-bottom:16px;
+}
+.hero h1 em{
+  font-style:normal;font-weight:800;
+  background:linear-gradient(120deg,var(--t1),var(--t2) 50%,var(--t3));
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.hero p{
+  color:var(--ink-2);font-size:clamp(.92rem,1.8vw,1.05rem);
+  max-width:560px;margin:0 auto;line-height:1.65;
+}
+
+/* tool grid */
+.tools{
+  display:grid;gap:16px;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  margin-bottom:48px;
+}
+@media (min-width:860px){
+  .tools{grid-template-columns:repeat(3,1fr)}
+}
+.tool{
+  position:relative;overflow:hidden;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:20px;padding:26px 22px 22px;
+  display:flex;flex-direction:column;gap:14px;
+  transition:all .3s cubic-bezier(.2,.8,.2,1);
+  cursor:pointer;
+  animation:rise .7s cubic-bezier(.2,.8,.2,1) both;
+}
+.tool:nth-child(1){animation-delay:.05s}
+.tool:nth-child(2){animation-delay:.12s}
+.tool:nth-child(3){animation-delay:.19s}
+.tool::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--tool-color,var(--accent));
+  transition:height .25s ease;
+}
+.tool::after{
+  content:'';position:absolute;top:-60%;right:-30%;
+  width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,var(--tool-color,var(--accent)) 0%,transparent 65%);
+  opacity:.08;pointer-events:none;transition:opacity .35s ease;
+}
+.tool:hover{
+  border-color:color-mix(in srgb,var(--tool-color,var(--accent)) 40%,var(--line));
+  transform:translateY(-4px);
+  box-shadow:0 24px 48px -24px var(--tool-color,var(--accent));
+}
+.tool:hover::before{height:5px}
+.tool:hover::after{opacity:.16}
+.tool:hover .tool-arrow{transform:translate(3px,-3px);opacity:1}
+
+.tool.t1{--tool-color:var(--t1)}
+.tool.t2{--tool-color:var(--t2)}
+.tool.t3{--tool-color:var(--t3)}
+
+.tool-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.tool-icon{
+  width:52px;height:52px;border-radius:14px;flex-shrink:0;
+  display:grid;place-items:center;
+  background:color-mix(in srgb,var(--tool-color,var(--accent)) 12%,var(--bg-2));
+  color:var(--tool-color,var(--accent));
+  border:1px solid color-mix(in srgb,var(--tool-color,var(--accent)) 25%,transparent);
+  transition:transform .3s ease;
+}
+.tool:hover .tool-icon{transform:scale(1.08) rotate(-4deg)}
+.tool-icon svg{
+  width:26px;height:26px;stroke:currentColor;fill:none;
+  stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;
+}
+.tool-arrow{
+  width:26px;height:26px;
+  display:grid;place-items:center;color:var(--tool-color,var(--accent));
+  opacity:.5;transition:all .25s ease;
+}
+.tool-arrow svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+.tool-name{
+  font-family:'Outfit',sans-serif;font-weight:700;
+  font-size:1.45rem;letter-spacing:-.03em;line-height:1.1;
+}
+.tool-name span{color:var(--tool-color,var(--accent))}
+.tool-tag{
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;
+  color:var(--ink-3);letter-spacing:.1em;text-transform:uppercase;
+  margin-top:4px;
+}
+.tool-desc{
+  color:var(--ink-2);font-size:.88rem;line-height:1.6;
+  flex:1;
+}
+.tool-features{
+  display:flex;flex-wrap:wrap;gap:5px;
+  padding-top:8px;
+}
+.chip{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;
+  color:var(--ink-2);
+  padding:3px 8px;border-radius:6px;
+  background:var(--bg-2);border:1px solid var(--line-2);
+  transition:all .2s ease;
+}
+.tool:hover .chip{
+  border-color:color-mix(in srgb,var(--tool-color,var(--accent)) 25%,transparent);
+  color:var(--ink);
+}
+.tool-launch{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding-top:14px;margin-top:auto;
+  border-top:1px dashed var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:600;
+  color:var(--tool-color,var(--accent));
+  letter-spacing:.05em;text-transform:uppercase;
+}
+.tool-launch svg{
+  width:14px;height:14px;stroke:currentColor;fill:none;
+  stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* about strip */
+.about{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:20px;padding:26px 22px;
+  display:grid;gap:20px;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  animation:rise .7s cubic-bezier(.2,.8,.2,1) .3s both;
+}
+@media (max-width:720px){
+  .about{grid-template-columns:1fr;text-align:center}
+}
+.about-text h3{
+  font-family:'Outfit',sans-serif;font-weight:600;
+  font-size:1.1rem;letter-spacing:-.02em;margin-bottom:6px;
+}
+.about-text p{color:var(--ink-2);font-size:.88rem;line-height:1.65;max-width:640px}
+.about-text p b{color:var(--ink);font-weight:600}
+.about-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 16px;border-radius:11px;
+  font-weight:600;font-size:.85rem;
+  background:var(--card-2);color:var(--ink);
+  border:1px solid var(--line);
+  transition:all .2s ease;
+  cursor:pointer;
+}
+.btn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.btn.primary{
+  background:var(--accent);color:var(--bg);border-color:transparent;
+}
+.btn.primary:hover{
+  background:var(--accent-2);color:var(--bg);
+  box-shadow:0 12px 28px -12px var(--accent);
+}
+
+/* footer */
+footer{
+  margin-top:56px;padding:26px 22px 40px;
+  padding-bottom:calc(40px + env(safe-area-inset-bottom,0));
+  border-top:1px solid var(--line-2);
+  text-align:center;
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;
+  color:var(--ink-3);letter-spacing:.04em;line-height:1.8;
+}
+footer b{color:var(--accent);font-weight:700}
+footer a{color:var(--ink-3);transition:color .2s}
+footer a:hover{color:var(--accent)}
+footer .dot-sep{opacity:.4;margin:0 8px}
+
+/* modal */
+.modal-back{
+  position:fixed;inset:0;z-index:1500;
+  background:color-mix(in srgb,var(--bg) 60%,rgba(0,0,0,.65));
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;
+  overflow-y:auto;padding:20px;
+  display:flex;align-items:flex-start;justify-content:center;
+}
+.modal-back.open{opacity:1;visibility:visible}
+.modal{
+  width:100%;max-width:620px;margin:40px auto;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:20px;padding:28px;
+  box-shadow:0 40px 80px -32px rgba(0,0,0,.6);
+  transform:translateY(12px);transition:transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.modal-back.open .modal{transform:none}
+@media (max-width:600px){.modal{padding:22px;border-radius:18px;margin:20px auto}}
+.modal-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:22px;
+}
+.modal-head h2{
+  font-family:'Outfit',sans-serif;font-weight:700;
+  font-size:1.3rem;letter-spacing:-.025em;
+}
+.close-btn{
+  width:36px;height:36px;border-radius:10px;
+  display:grid;place-items:center;color:var(--ink-3);
+  transition:all .2s ease;flex-shrink:0;
+}
+.close-btn:hover{background:var(--card-2);color:var(--ink)}
+.close-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+.about-grid{display:flex;flex-direction:column;gap:18px}
+.about-block h4{
+  font-family:'JetBrains Mono',monospace;font-size:.66rem;font-weight:600;
+  color:var(--accent);letter-spacing:.14em;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.about-block p{color:var(--ink-2);font-size:.88rem;line-height:1.7}
+.about-block b{color:var(--ink);font-weight:600}
+.about-block code{
+  font-family:'JetBrains Mono',monospace;font-size:.82em;
+  background:var(--bg-2);padding:2px 6px;border-radius:5px;
+  color:var(--accent);
+}
+.about-block ul{
+  list-style:none;display:flex;flex-direction:column;gap:6px;
+  color:var(--ink-2);font-size:.88rem;line-height:1.6;
+}
+.about-block ul li{padding-inline-start:16px;position:relative}
+.about-block ul li::before{
+  content:'';position:absolute;inset-inline-start:0;top:.6em;
+  width:5px;height:5px;border-radius:50%;background:var(--accent);
+}
+
+/* toast */
+.toast{
+  position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0));
+  transform:translate(-50%,120%);z-index:2000;
+  padding:11px 20px;border-radius:11px;
+  background:var(--ink);color:var(--bg);
+  font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:500;
+  box-shadow:0 20px 40px -16px rgba(0,0,0,.5);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1);
+  max-width:calc(100vw - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.toast.show{transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+
+<div id="preloader">
+  <div class="pl-inner">
+    <div class="pl-mark">
+      <svg viewBox="0 0 64 64">
+        <circle class="c1" cx="22" cy="34" r="8"/>
+        <circle class="c2" cx="42" cy="22" r="7"/>
+        <circle class="c3" cx="42" cy="46" r="7"/>
+      </svg>
+    </div>
+    <div class="pl-word">MC88 STUDIO</div>
+    <div class="pl-bar"><i></i></div>
+  </div>
+</div>
+
+<header class="top">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 64 64">
+        <circle class="c1" cx="22" cy="34" r="8"/>
+        <circle class="c2" cx="42" cy="22" r="7"/>
+        <circle class="c3" cx="42" cy="46" r="7"/>
+      </svg>
+    </div>
+    <div>
+      <div class="brand-name">MC<b>88</b> STUDIO</div>
+      <div class="brand-sub">three tools · one launcher</div>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="iconbtn" id="themeBtn" title="change theme">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+    </button>
+    <button class="iconbtn" id="helpBtn" title="about">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor" stroke="none"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-eyebrow">personal build · by MC88</div>
+    <h1>Three tools.<br>One <em>launcher</em>.</h1>
+    <p>
+      Small, focused utilities that run entirely in your browser and talk directly to your own GitHub account.
+      No servers, no subscriptions, no tracking. Pick one to begin.
+    </p>
+  </section>
+
+  <section class="tools" id="tools"></section>
+
+  <section class="about">
+    <div class="about-text">
+      <h3>Built with the same idea</h3>
+      <p>
+        Each tool is a <b>single HTML file</b> that runs entirely on your device and speaks directly to
+        <b>api.github.com</b>. Your data never touches a third-party server, and nothing here costs a cent.
+      </p>
+    </div>
+    <div class="about-actions">
+      <button class="btn" id="helpBtn2">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/></svg>
+        About
+      </button>
+      <a class="btn primary" href="https://github.com/MC-MC88" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        GitHub
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <b>MC88 STUDIO</b> · © 2025 · MC88
+    <br>
+    <a href="mailto:mohamed005cheikh@gmail.com">mohamed005cheikh@gmail.com</a>
+    <span class="dot-sep">·</span>
+    <a href="https://wa.me/22230726475" target="_blank" rel="noopener">+222 30 72 64 75</a>
+  </footer>
+</main>
+
+<div class="modal-back" id="aboutModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>About MC88 STUDIO</h2>
+      <button class="close-btn" data-close>
+        <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-block">
+        <h4>What is this</h4>
+        <p>
+          <b>MC88 STUDIO</b> is a small collection of utilities built around the same idea: give simple,
+          honest tools that talk straight to <b>GitHub</b> from your own browser. No accounts, no servers,
+          no hidden costs. Each tool is one HTML file you can host anywhere, or just open locally.
+        </p>
+      </div>
+
+      <div class="about-block">
+        <h4>The three tools</h4>
+        <ul>
+          <li><b>CtoA88</b> — turn an HTML project into an Android APK, built in the cloud.</li>
+          <li><b>push88</b> — a bridge between your phone and a GitHub repository for file transfer.</li>
+          <li><b>issues88</b> — capture GitHub issues in one tap, offline-friendly, from anywhere.</li>
+        </ul>
+      </div>
+
+      <div class="about-block">
+        <h4>How to use</h4>
+        <p>
+          Pick a tool from the three cards. Each one has its own first-time setup with a guide
+          built in — usually just pasting a GitHub token you create once. After that, they
+          open and work.
+        </p>
+      </div>
+
+      <div class="about-block">
+        <h4>Privacy</h4>
+        <p>
+          Your tokens and files stay <b>only on your device</b> and go directly to GitHub.
+          Nothing is logged, nothing is proxied, nothing is tracked. If you lose your device,
+          revoke the token from GitHub settings — that is all you need to do.
+        </p>
+      </div>
+
+      <div class="about-block">
+        <h4>Install as app</h4>
+        <p>
+          Open any tool in Chrome or Edge, then use <code>Install app</code> from the browser
+          menu. It will open full-screen from your home screen like a native app.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* where each tool lives — edit if folder names change */
+const CONFIG = {
+  links: {
+    ctoa: 'ctoa88/',
+    push: 'push88/',
+    issues: 'issues88/'
+  }
+};
+
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+const TOOLS = [
+  {
+    id: 'ctoa',
+    cls: 't1',
+    name: 'CtoA<span>88</span>',
+    tag: 'html → apk',
+    desc: 'Turn a single HTML file or a ZIP project into a working Android APK. Built in the cloud, downloaded back to your phone.',
+    features: ['build apk', 'auto sanitize', 'cloud gradle'],
+    href: CONFIG.links.ctoa,
+    icon: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/><path d="M9 10l3 3 3-3"/></svg>'
+  },
+  {
+    id: 'push',
+    cls: 't2',
+    name: 'push<span>88</span>',
+    tag: 'file bridge',
+    desc: 'Push files from your phone into a GitHub repository, then pull them back on any other device. Offline-friendly, folder-friendly.',
+    features: ['upload', 'download', 'browse repo'],
+    href: CONFIG.links.push,
+    icon: '<svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/><path d="M5 21h14"/></svg>'
+  },
+  {
+    id: 'issues',
+    cls: 't3',
+    name: 'issues<span>88</span>',
+    tag: 'capture notes',
+    desc: 'Write a GitHub issue the moment you notice it. Queues offline, sends itself, tracks every repo from one screen.',
+    features: ['one-tap', 'labels', 'multi-repo'],
+    href: CONFIG.links.issues,
+    icon: '<svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.83z"/><circle cx="7" cy="7" r="1.5"/></svg>'
+  }
+];
+
+function renderTools(){
+  const box = $('#tools');
+  box.innerHTML = TOOLS.map(t => `
+    <a class="tool ${t.cls}" href="${t.href}" data-tool="${t.id}">
+      <div class="tool-head">
+        <div class="tool-icon">${t.icon}</div>
+        <div class="tool-arrow">
+          <svg viewBox="0 0 24 24"><path d="M7 17L17 7M7 7h10v10"/></svg>
+        </div>
+      </div>
+      <div>
+        <div class="tool-name">${t.name}</div>
+        <div class="tool-tag">${t.tag}</div>
+      </div>
+      <div class="tool-desc">${t.desc}</div>
+      <div class="tool-features">
+        ${t.features.map(f => `<span class="chip">${f}</span>`).join('')}
+      </div>
+      <div class="tool-launch">
+        <span>open tool</span>
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+  `).join('');
+}
+
+/* theme */
+const THEMES = ['graphite','ivory','midnight','ember','slate'];
+const THEME_LABEL = { graphite:'Graphite', ivory:'Ivory', midnight:'Midnight', ember:'Ember', slate:'Slate' };
+const META = { graphite:'#0b0d10', ivory:'#fbfaf6', midnight:'#050a18', ember:'#14100c', slate:'#f5f7fa' };
+const store = {
+  get(k,d){ try{ const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+};
+function applyTheme(t){
+  if (!THEMES.includes(t)) t = 'graphite';
+  document.documentElement.dataset.theme = t;
+  store.set('mc88.theme', t);
+  $('#metaColor').setAttribute('content', META[t]);
+}
+applyTheme(store.get('mc88.theme','graphite'));
+
+/* toast */
+let toastTimer;
+function toast(msg){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+$('#themeBtn').addEventListener('click', () => {
+  const cur = store.get('mc88.theme','graphite');
+  const i = THEMES.indexOf(cur);
+  const next = THEMES[(i + 1) % THEMES.length];
+  applyTheme(next);
+  toast('theme · ' + THEME_LABEL[next]);
+});
+
+/* about modal */
+function openAbout(){ $('#aboutModal').classList.add('open'); }
+function closeAbout(){ $('#aboutModal').classList.remove('open'); }
+$('#helpBtn').addEventListener('click', openAbout);
+$('#helpBtn2').addEventListener('click', openAbout);
+$$('[data-close]').forEach(b => b.addEventListener('click', closeAbout));
+$('#aboutModal').addEventListener('click', e => { if (e.target === $('#aboutModal')) closeAbout(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAbout(); });
+
+/* warn if a tool link looks unset */
+document.addEventListener('click', e => {
+  const link = e.target.closest('.tool');
+  if (!link) return;
+  const href = link.getAttribute('href') || '';
+  if (!href || href === '#' || href === '/'){
+    e.preventDefault();
+    toast('set CONFIG.links in the script');
+  }
+});
+
+/* pwa */
+(function setupPWA(){
+  try {
+    const icon = "data:image/svg+xml;base64," + btoa("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='#0b0d10'/><circle cx='176' cy='272' r='64' fill='#f59e0b'/><circle cx='336' cy='176' r='56' fill='#60a5fa'/><circle cx='336' cy='368' r='56' fill='#84cc16'/></svg>");
+    const manifest = {
+      name:'MC88 STUDIO', short_name:'MC88 STUDIO',
+      description:'Three small tools that talk to GitHub.',
+      start_url:'.', scope:'.', display:'standalone',
+      background_color:'#0b0d10', theme_color:'#0b0d10',
+      icons:[
+        { src:icon, sizes:'192x192', type:'image/svg+xml', purpose:'any' },
+        { src:icon, sizes:'512x512', type:'image/svg+xml', purpose:'any maskable' }
+      ]
+    };
+    const blob = new Blob([JSON.stringify(manifest)], { type:'application/manifest+json' });
+    const link = document.createElement('link');
+    link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
+    document.head.appendChild(link);
+    const apple = document.createElement('link');
+    apple.rel = 'apple-touch-icon'; apple.href = icon;
+    document.head.appendChild(apple);
+  }catch(e){}
+})();
+
+/* init */
+renderTools();
+
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const pl = $('#preloader');
+    pl.classList.add('hide');
+    setTimeout(() => pl.remove(), 800);
+  }, 3000);
+});
+
+})();
+</script>
+</body>
+</html>
