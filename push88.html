@@ -1,0 +1,1327 @@
+<!doctype html>
+<html lang="en" data-theme="day">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f8fc" id="metaColor">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="push88">
+<title>push88</title>
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%230ea5e9'/><path d='M20 40 L32 24 L44 40' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/><path d='M32 24 L32 46' stroke='white' stroke-width='4' stroke-linecap='round'/></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Manrope:wght@400..800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<style>
+/* ---------- themes ---------- */
+:root,[data-theme="day"]{
+  --bg:#f4f8fc;--card:#ffffff;--card-2:#f6f9fc;
+  --ink:#0f172a;--ink-2:#475569;--ink-3:#94a3b8;
+  --line:#e2e8f0;
+  --accent:#0ea5e9;--accent-2:#0284c7;--accent-soft:rgba(14,165,233,.10);
+  --ok:#10b981;--warn:#f59e0b;--danger:#ef4444;
+  color-scheme:light;
+}
+[data-theme="night"]{
+  --bg:#0b1220;--card:#141d2e;--card-2:#1a2438;
+  --ink:#e2e8f0;--ink-2:#94a3b8;--ink-3:#64748b;
+  --line:#243044;
+  --accent:#38bdf8;--accent-2:#0ea5e9;--accent-soft:rgba(56,189,248,.12);
+  --ok:#34d399;--warn:#fbbf24;--danger:#f87171;
+  color-scheme:dark;
+}
+[data-theme="sunset"]{
+  --bg:#1c0f1f;--card:#2a1830;--card-2:#341e3c;
+  --ink:#ffe4d6;--ink-2:#e0a8c0;--ink-3:#8d5473;
+  --line:#3d2447;
+  --accent:#fb923c;--accent-2:#f97316;--accent-soft:rgba(251,146,60,.14);
+  --ok:#4ade80;--warn:#fbbf24;--danger:#f87171;
+  color-scheme:dark;
+}
+[data-theme="sunrise"]{
+  --bg:#fff7f0;--card:#ffffff;--card-2:#fff9f4;
+  --ink:#4a1942;--ink-2:#9d4e7c;--ink-3:#c99ab5;
+  --line:#f5e0e8;
+  --accent:#ec4899;--accent-2:#db2777;--accent-soft:rgba(236,72,153,.10);
+  --ok:#16a34a;--warn:#ea580c;--danger:#dc2626;
+  color-scheme:light;
+}
+[data-theme="rain"]{
+  --bg:#eef1f5;--card:#ffffff;--card-2:#f5f7fa;
+  --ink:#1a2332;--ink-2:#4d5a6e;--ink-3:#8b97a8;
+  --line:#dde3ea;
+  --accent:#475569;--accent-2:#334155;--accent-soft:rgba(71,85,105,.10);
+  --ok:#059669;--warn:#d97706;--danger:#dc2626;
+  color-scheme:light;
+}
+
+/* ---------- base ---------- */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{
+  font-family:'Manrope',system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);
+  font-size:15px;line-height:1.55;min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  transition:background .3s,color .3s;
+}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input,select{font:inherit;color:inherit;font-family:inherit}
+a{color:var(--accent);text-decoration:none}
+svg{display:block}
+.hidden{display:none!important}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* ---------- preloader ---------- */
+#preloader{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);display:grid;place-items:center;
+  transition:opacity .5s,visibility .5s;
+}
+#preloader.hide{opacity:0;visibility:hidden;pointer-events:none}
+.pl-inner{display:flex;flex-direction:column;align-items:center;gap:16px}
+.pl-orb{
+  width:56px;height:56px;border-radius:16px;
+  background:var(--accent);display:grid;place-items:center;
+  animation:orb 1.8s ease-in-out infinite;
+}
+.pl-orb svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+@keyframes orb{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.pl-brand{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:1.15rem;letter-spacing:-.03em;color:var(--ink)}
+.pl-bar{width:120px;height:3px;border-radius:99px;background:var(--line);overflow:hidden}
+.pl-bar i{display:block;height:100%;width:40%;background:var(--accent);border-radius:99px;animation:bar 1.4s cubic-bezier(.4,0,.6,1) infinite}
+@keyframes bar{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+
+/* ---------- header ---------- */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  background:color-mix(in srgb,var(--bg) 85%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:16px;
+  padding:12px 22px;
+}
+.brand{display:flex;align-items:center;gap:9px;color:var(--ink);font-family:'Bricolage Grotesque',sans-serif;font-weight:700;letter-spacing:-.03em;font-size:1.02rem;flex-shrink:0}
+.brand .logo{
+  width:28px;height:28px;border-radius:9px;
+  background:var(--accent);display:grid;place-items:center;
+}
+.brand .logo svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.nav{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 13px;border-radius:9px;
+  font-weight:600;font-size:.84rem;color:var(--ink-2);
+  white-space:nowrap;transition:all .15s;
+}
+.nav-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav-btn:hover{background:var(--card-2);color:var(--ink)}
+.nav-btn.active{background:var(--accent-soft);color:var(--accent)}
+.actions{display:flex;gap:6px;flex-shrink:0}
+.icon-btn{
+  width:38px;height:38px;border-radius:10px;position:relative;
+  display:grid;place-items:center;color:var(--ink-2);
+  background:var(--card);border:1px solid var(--line);
+  transition:all .15s;
+}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+.icon-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--ink-3)}
+.dot.on{background:var(--ok);box-shadow:0 0 0 2px color-mix(in srgb,var(--ok) 25%,transparent)}
+.dot.err{background:var(--danger)}
+@media (max-width:680px){
+  .topbar{padding:10px 14px;gap:10px}
+  .brand span{display:none}
+  .nav-btn span{display:none}
+  .nav-btn{padding:9px 11px}
+}
+
+/* ---------- layout ---------- */
+.main{max-width:860px;margin:0 auto;padding:22px 22px 60px}
+@media (max-width:680px){.main{padding:16px 14px 40px}}
+.page-head{margin-bottom:16px}
+.page-head h1{
+  font-family:'Bricolage Grotesque',sans-serif;
+  font-weight:600;font-size:clamp(1.35rem,4vw,1.75rem);
+  letter-spacing:-.035em;line-height:1.15;
+}
+.page-head h1 b{color:var(--accent);font-weight:700}
+.view{display:none}
+.view.active{display:block;animation:in .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- card ---------- */
+.card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:16px;padding:18px;margin-bottom:14px;
+}
+@media (max-width:680px){.card{padding:15px;border-radius:14px}}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.card-head h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:1.02rem;letter-spacing:-.02em}
+.card-head p{color:var(--ink-3);font-size:.8rem}
+.tag{
+  font-family:'Space Mono',monospace;font-size:.64rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:var(--accent);background:var(--accent-soft);
+  padding:3px 9px;border-radius:99px;
+}
+
+/* ---------- connection strip ---------- */
+.conn{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 16px;border-radius:14px;
+  background:var(--card);border:1px solid var(--line);
+  margin-bottom:14px;transition:border-color .25s;
+}
+.conn.ready{border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}
+.conn.fail{border-color:color-mix(in srgb,var(--danger) 45%,var(--line))}
+.conn-icon{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  display:grid;place-items:center;
+  background:var(--card-2);color:var(--ink-2);
+}
+.conn.ready .conn-icon{background:var(--ok);color:#fff}
+.conn.fail .conn-icon{background:var(--danger);color:#fff}
+.conn-icon svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.conn-info{flex:1;min-width:0}
+.conn-info h3{font-family:'Bricolage Grotesque',sans-serif;font-size:.92rem;font-weight:600;margin-bottom:1px}
+.conn-info p{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--ink-3);word-break:break-all;line-height:1.4}
+
+/* ---------- drop zone ---------- */
+.drop{
+  border:1.5px dashed var(--line);border-radius:14px;
+  padding:28px 20px;text-align:center;
+  background:var(--card-2);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  transition:all .2s;
+}
+.drop:hover,.drop.drag{border-color:var(--accent);background:var(--accent-soft)}
+.drop-icon{
+  width:52px;height:52px;border-radius:14px;
+  background:var(--accent);display:grid;place-items:center;
+  transition:transform .25s;
+}
+.drop:hover .drop-icon{transform:translateY(-3px)}
+.drop-icon svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.drop h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:1rem}
+.drop p{color:var(--ink-2);font-size:.82rem;max-width:400px;line-height:1.55}
+.drop code{
+  font-family:'Space Mono',monospace;font-size:.85em;
+  background:var(--accent-soft);color:var(--accent);
+  padding:2px 6px;border-radius:5px;font-weight:700;
+}
+
+/* ---------- buttons ---------- */
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:10px 16px;border-radius:10px;
+  font-weight:600;font-size:.85rem;
+  background:var(--accent);color:#fff;
+  border:1px solid transparent;transition:all .15s;
+}
+.btn:hover{background:var(--accent-2)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.btn.ghost{background:var(--card-2);color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{background:var(--card);border-color:var(--accent);color:var(--accent)}
+.btn.danger{background:var(--danger)}
+.btn.danger:hover{background:color-mix(in srgb,var(--danger) 85%,black)}
+.btn.sm{padding:7px 12px;font-size:.78rem;border-radius:9px}
+.btn.sm svg{width:13px;height:13px}
+.btn.block{width:100%}
+
+/* ---------- fields ---------- */
+.field{margin-bottom:12px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:600px){.field-row{grid-template-columns:1fr}}
+.field label{
+  display:block;font-family:'Space Mono',monospace;font-size:.64rem;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:5px;
+}
+.field input,.field select{
+  width:100%;padding:10px 13px;border-radius:10px;
+  background:var(--card-2);border:1.5px solid var(--line);
+  font-size:.86rem;outline:none;transition:all .15s;
+}
+.field input:focus,.field select:focus{border-color:var(--accent);background:var(--card)}
+.field .hint{font-size:.74rem;color:var(--ink-3);margin-top:5px;line-height:1.5}
+.field .hint a{color:var(--accent);border-bottom:1px dotted currentColor}
+.field .hint b{color:var(--ink-2)}
+
+/* ---------- file list ---------- */
+.files{display:flex;flex-direction:column;gap:4px;margin-top:12px}
+.file{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:10px;
+  background:var(--card-2);transition:all .15s;
+}
+.file:hover{background:var(--card);box-shadow:0 0 0 1px var(--line) inset}
+.file-icon{
+  width:32px;height:32px;border-radius:9px;flex-shrink:0;
+  display:grid;place-items:center;
+  background:var(--accent-soft);color:var(--accent);
+}
+.file-icon svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.file-icon.img{background:color-mix(in srgb,var(--warn) 15%,transparent);color:var(--warn)}
+.file-icon.zip{background:color-mix(in srgb,var(--danger) 15%,transparent);color:var(--danger)}
+.file-icon.code{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.file-info{flex:1;min-width:0}
+.file-info .name{
+  font-family:'Space Mono',monospace;font-size:.8rem;font-weight:500;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  direction:ltr;text-align:left;
+}
+.file-info .meta{font-size:.68rem;color:var(--ink-3);margin-top:1px}
+.file-actions{display:flex;gap:2px;flex-shrink:0}
+.file-actions button{
+  width:30px;height:30px;border-radius:8px;
+  display:grid;place-items:center;color:var(--ink-3);
+  transition:all .15s;
+}
+.file-actions button:hover{background:var(--card);color:var(--accent)}
+.file-actions button.del:hover{color:var(--danger)}
+.file-actions svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- empty ---------- */
+.empty{
+  padding:34px 18px;text-align:center;color:var(--ink-3);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.empty svg{width:38px;height:38px;stroke:currentColor;fill:none;stroke-width:1.5;opacity:.55}
+.empty h4{font-family:'Bricolage Grotesque',sans-serif;color:var(--ink-2);font-weight:500;font-size:.94rem}
+.empty p{font-size:.8rem;max-width:300px;line-height:1.55}
+
+/* ---------- progress ---------- */
+.progress-list{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.pitem{padding:10px 12px;border-radius:10px;background:var(--card-2)}
+.pitem .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.pitem .name{
+  font-family:'Space Mono',monospace;font-size:.74rem;
+  direction:ltr;text-align:left;flex:1;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.pitem .pct{font-family:'Space Mono',monospace;font-size:.68rem;font-weight:700;color:var(--accent)}
+.pitem .bar{height:3px;background:var(--line);border-radius:99px;overflow:hidden}
+.pitem .bar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s cubic-bezier(.2,.8,.2,1)}
+.pitem.done .bar i{background:var(--ok)}
+.pitem.fail .bar i{background:var(--danger)}
+.pitem.done .pct{color:var(--ok)}
+.pitem.fail .pct{color:var(--danger)}
+
+/* ---------- log ---------- */
+.log{
+  font-family:'Space Mono',monospace;font-size:.73rem;
+  background:var(--card-2);border-radius:12px;
+  padding:12px;max-height:340px;overflow-y:auto;
+  line-height:1.7;direction:ltr;text-align:left;
+}
+.log::-webkit-scrollbar{width:6px}
+.log::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+.log .l{opacity:0;animation:logIn .25s ease forwards;word-break:break-word}
+@keyframes logIn{to{opacity:1}}
+.log .l.ok{color:var(--ok)}
+.log .l.err{color:var(--danger)}
+.log .l.warn{color:var(--warn)}
+.log .l.dim{color:var(--ink-3)}
+.log .l.info{color:var(--accent)}
+
+/* ---------- theme dock ---------- */
+.theme-dock{
+  position:fixed;bottom:20px;right:20px;z-index:50;
+  display:flex;gap:6px;padding:8px;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:14px;
+  box-shadow:0 12px 30px -14px rgba(0,0,0,.3);
+  transform:translateY(calc(100% + 30px));
+  transition:transform .3s cubic-bezier(.2,.8,.2,1);
+}
+.theme-dock.open{transform:translateY(0)}
+.theme-swatch{
+  width:28px;height:28px;border-radius:8px;
+  border:2px solid transparent;transition:all .15s;
+}
+.theme-swatch:hover{transform:scale(1.08)}
+.theme-swatch.on{border-color:var(--ink)}
+.theme-swatch[data-t="day"]{background:linear-gradient(135deg,#bae6fd,#fff)}
+.theme-swatch[data-t="night"]{background:linear-gradient(135deg,#0b1220,#38bdf8)}
+.theme-swatch[data-t="sunset"]{background:linear-gradient(135deg,#2a1830,#fb923c)}
+.theme-swatch[data-t="sunrise"]{background:linear-gradient(135deg,#fbcfe8,#fb923c)}
+.theme-swatch[data-t="rain"]{background:linear-gradient(135deg,#cbd5e1,#475569)}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed;left:50%;bottom:22px;transform:translate(-50%,120%);
+  z-index:2000;padding:10px 18px;border-radius:10px;
+  background:var(--ink);color:var(--bg);
+  font-family:'Space Mono',monospace;font-size:.74rem;
+  letter-spacing:.02em;
+  box-shadow:0 15px 35px -12px rgba(0,0,0,.4);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1);
+  max-width:calc(100vw - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.toast.show{transform:translate(-50%,0)}
+.toast.err{background:var(--danger);color:#fff}
+.toast.ok{background:var(--ok);color:#fff}
+
+/* ---------- footer ---------- */
+.foot{
+  padding:18px 0 30px;text-align:center;
+  font-family:'Space Mono',monospace;font-size:.66rem;
+  color:var(--ink-3);letter-spacing:.02em;line-height:1.9;
+}
+.foot b{color:var(--accent);font-weight:700}
+.foot a{color:var(--ink-3)}
+.foot a:hover{color:var(--accent)}
+
+/* ---------- modal ---------- */
+.modal-back{
+  position:fixed;inset:0;z-index:1500;
+  background:color-mix(in srgb,var(--ink) 42%,transparent);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;
+  display:grid;place-items:center;padding:20px;
+}
+.modal-back.open{opacity:1;visibility:visible}
+.modal{
+  width:100%;max-width:460px;background:var(--card);
+  border:1px solid var(--line);border-radius:16px;
+  padding:22px;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.4);
+  transform:translateY(8px) scale(.98);transition:transform .25s;
+}
+.modal-back.open .modal{transform:none}
+.modal h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:1.08rem;letter-spacing:-.02em;margin-bottom:5px}
+.modal p{color:var(--ink-2);font-size:.85rem;margin-bottom:14px;line-height:1.6}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<div id="preloader">
+  <div class="pl-inner">
+    <div class="pl-orb">
+      <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </div>
+    <div class="pl-brand">push88</div>
+    <div class="pl-bar"><i></i></div>
+  </div>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="#" id="brandLink">
+    <span class="logo"><svg viewBox="0 0 24 24"><path d="M6 15 L12 8 L18 15 M12 8 L12 20"/></svg></span>
+    <span>push88</span>
+  </a>
+  <nav class="nav" id="railNav">
+    <button class="nav-btn active" data-view="push" title="Push">
+      <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg><span>Push</span>
+    </button>
+    <button class="nav-btn" data-view="pull" title="Pull">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg><span>Pull</span>
+    </button>
+    <button class="nav-btn" data-view="files" title="Files">
+      <svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2-2h3l2 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7z"/></svg><span>Files</span>
+    </button>
+    <button class="nav-btn" data-view="activity" title="Activity">
+      <svg viewBox="0 0 24 24"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg><span>Activity</span>
+    </button>
+    <button class="nav-btn" data-view="settings" title="Settings">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span>
+    </button>
+  </nav>
+  <div class="actions">
+    <button class="icon-btn" id="themeBtn" title="Theme">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="icon-btn" id="connBtn" title="Connection">
+      <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      <span class="dot" id="connDot"></span>
+    </button>
+  </div>
+</header>
+
+<main class="main">
+  <div class="page-head">
+    <h1 id="pageTitle">Push <b>files</b></h1>
+  </div>
+
+  <div class="views">
+
+    <!-- PUSH -->
+    <section class="view active" data-view="push">
+      <div class="conn" id="connStrip">
+        <div class="conn-icon" id="connIcon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+        </div>
+        <div class="conn-info">
+          <h3 id="connTitle">Not connected</h3>
+          <p id="connSub">open Settings to add your token</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Upload files</h2>
+          <span class="tag" id="uploadCount">0 files</span>
+        </div>
+        <div class="drop" id="pushDrop">
+          <div class="drop-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          </div>
+          <h3>Drop files here</h3>
+          <p>ZIP archives, single files, or multiple selection. <code>≤ 40 MB</code> total.</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn" id="pickFilesBtn">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Pick files
+          </button>
+          <button class="btn ghost" id="pickFolderBtn">
+            <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            Pick folder
+          </button>
+          <button class="btn ghost" id="clearQueueBtn">
+            <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            Clear
+          </button>
+        </div>
+        <div class="files" id="pushFiles"></div>
+        <button class="btn block" id="pushBtn" style="margin-top:14px" disabled>
+          <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          Upload to cloud
+        </button>
+        <input type="file" id="fileInput" multiple hidden>
+        <input type="file" id="folderInput" webkitdirectory directory multiple hidden>
+      </div>
+
+      <div class="card" id="pushProgress" style="display:none">
+        <div class="card-head"><h2>Progress</h2></div>
+        <div class="progress-list" id="pushProgressList"></div>
+      </div>
+    </section>
+
+    <!-- PULL -->
+    <section class="view" data-view="pull">
+      <div class="card">
+        <div class="card-head">
+          <h2>Download from cloud</h2>
+          <button class="btn ghost sm" id="refreshPullBtn">
+            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Refresh
+          </button>
+        </div>
+        <div class="field">
+          <label>Cloud path</label>
+          <input type="text" id="pullPath" value="" placeholder="folder/in/repo (leave empty for root)" spellcheck="false">
+          <p class="hint">Browse any folder inside your configured repository.</p>
+        </div>
+        <div class="files" id="pullFiles">
+          <div class="empty">
+            <svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2-2h3l2 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7z"/></svg>
+            <h4>No files loaded</h4>
+            <p>Click Refresh to fetch the folder listing from GitHub.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FILES -->
+    <section class="view" data-view="files">
+      <div class="card">
+        <div class="card-head">
+          <h2>Browse cloud</h2>
+          <span class="tag" id="browseTag">—</span>
+        </div>
+        <div class="field">
+          <label>Path</label>
+          <input type="text" id="browsePath" value="" placeholder="repo root" spellcheck="false">
+        </div>
+        <div class="btn-row">
+          <button class="btn ghost sm" id="browseRootBtn">Root</button>
+          <button class="btn ghost sm" id="browseUpBtn">Up one level</button>
+          <button class="btn ghost sm" id="browseGoBtn">Go</button>
+        </div>
+        <div class="files" id="browseFiles" style="margin-top:14px"></div>
+      </div>
+    </section>
+
+    <!-- ACTIVITY -->
+    <section class="view" data-view="activity">
+      <div class="card">
+        <div class="card-head">
+          <h2>Activity log</h2>
+          <button class="btn ghost sm" id="clearLogBtn">
+            <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            Clear
+          </button>
+        </div>
+        <div class="log" id="activityLog">
+          <div class="l dim"># push88 ready</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="view" data-view="settings">
+      <div class="card">
+        <div class="card-head"><h2>GitHub connection</h2></div>
+        <div class="field-row">
+          <div class="field">
+            <label>Username</label>
+            <input type="text" id="setUser" spellcheck="false" autocomplete="off">
+          </div>
+          <div class="field">
+            <label>Repository</label>
+            <input type="text" id="setRepo" spellcheck="false" autocomplete="off">
+          </div>
+        </div>
+        <div class="field">
+          <label>Branch</label>
+          <input type="text" id="setBranch" value="main" spellcheck="false" autocomplete="off">
+        </div>
+        <div class="field">
+          <label>Personal access token</label>
+          <input type="password" id="setToken" spellcheck="false" autocomplete="off">
+          <p class="hint">Scopes needed: <b>repo</b>. Create one at <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener">github.com/settings/tokens/new</a>. Stored only in this browser.</p>
+        </div>
+        <div class="field">
+          <label>Default cloud path</label>
+          <input type="text" id="setPath" placeholder="uploads/" spellcheck="false">
+          <p class="hint">Files are pushed into this folder by default. Leave empty for repo root.</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn" id="saveSettingsBtn">
+            <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Save & test
+          </button>
+          <button class="btn ghost" id="clearSettingsBtn">
+            <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            Forget everything
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>About</h2></div>
+        <p style="color:var(--ink-2);font-size:.86rem;line-height:1.7">
+          push88 is a personal cloud bridge. It talks directly to the GitHub API from your browser.
+          Nothing is sent to any third-party server. Your token never leaves this device.
+        </p>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="foot">
+    <b>push88</b> · personal build · © 2025 · MC88
+    <br>
+    <a href="mailto:mohamed005cheikh@gmail.com">mohamed005cheikh@gmail.com</a>
+    &nbsp;·&nbsp;
+    <a href="https://wa.me/22230726475" target="_blank" rel="noopener">+222 30 72 64 75</a>
+  </footer>
+</main>
+
+<div class="theme-dock" id="themeDock">
+  <button class="theme-swatch" data-t="day" title="Day"></button>
+  <button class="theme-swatch" data-t="night" title="Night"></button>
+  <button class="theme-swatch" data-t="sunset" title="Sunset"></button>
+  <button class="theme-swatch" data-t="sunrise" title="Sunrise"></button>
+  <button class="theme-swatch" data-t="rain" title="Rain"></button>
+</div>
+
+<div class="modal-back" id="modalBack">
+  <div class="modal">
+    <h3 id="modalTitle">Confirm</h3>
+    <p id="modalBody">Are you sure?</p>
+    <div class="modal-actions">
+      <button class="btn ghost" id="modalCancel">Cancel</button>
+      <button class="btn danger" id="modalConfirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* personal config — replace with your own */
+const CONFIG = {
+  user: '520dlrow',
+  repo: 'push88',
+  branch: 'main'
+};
+
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const fmtSize = n => n < 1024 ? n + ' B' : n < 1048576 ? (n/1024).toFixed(1) + ' KB' : (n/1048576).toFixed(2) + ' MB';
+
+let toastTimer;
+function toast(msg, cls){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = 'toast' + (cls ? ' ' + cls : '');
+  void t.offsetWidth;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+/* ---------- themes ---------- */
+const THEMES = ['day','night','sunset','sunrise','rain'];
+const META_COLORS = { day:'#f4f8fc', night:'#0b1220', sunset:'#1c0f1f', sunrise:'#fff7f0', rain:'#eef1f5' };
+function applyTheme(t){
+  if (!THEMES.includes(t)) t = 'day';
+  document.documentElement.dataset.theme = t;
+  store.set('push88.theme', t);
+  $$('.theme-swatch').forEach(s => s.classList.toggle('on', s.dataset.t === t));
+  $('#metaColor').setAttribute('content', META_COLORS[t]);
+}
+function cycleTheme(){
+  const cur = store.get('push88.theme', 'day');
+  const i = THEMES.indexOf(cur);
+  const next = THEMES[(i + 1) % THEMES.length];
+  applyTheme(next);
+  toast('theme · ' + next);
+}
+applyTheme(store.get('push88.theme', 'day'));
+$('#themeBtn').addEventListener('click', cycleTheme);
+$$('.theme-swatch').forEach(s => s.addEventListener('click', () => { applyTheme(s.dataset.t); toast('theme · ' + s.dataset.t); }));
+
+/* ---------- views ---------- */
+const VIEW_TITLES = {
+  push: 'Push <b>files</b>',
+  pull: 'Pull <b>files</b>',
+  files: 'Browse <b>cloud</b>',
+  activity: 'Activity <b>log</b>',
+  settings: 'Your <b>settings</b>'
+};
+function go(view){
+  $$('.view').forEach(v => v.classList.toggle('active', v.dataset.view === view));
+  $$('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  $('#pageTitle').innerHTML = VIEW_TITLES[view] || 'push88';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+$$('.nav-btn').forEach(b => b.addEventListener('click', () => go(b.dataset.view)));
+$('#brandLink').addEventListener('click', e => { e.preventDefault(); go('push'); });
+
+/* ---------- activity log ---------- */
+function logLine(text, cls){
+  const log = $('#activityLog');
+  const div = document.createElement('div');
+  div.className = 'l' + (cls ? ' ' + cls : '');
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+  while (log.children.length > 400) log.removeChild(log.firstChild);
+}
+$('#clearLogBtn').addEventListener('click', () => { $('#activityLog').innerHTML = '<div class="l dim"># log cleared</div>'; });
+
+/* ---------- settings ---------- */
+const settings = {
+  user: store.get('push88.user', CONFIG.user),
+  repo: store.get('push88.repo', CONFIG.repo),
+  branch: store.get('push88.branch', CONFIG.branch),
+  token: store.get('push88.token', ''),
+  path: store.get('push88.path', 'uploads/')
+};
+function loadSettingsForm(){
+  $('#setUser').value = settings.user;
+  $('#setRepo').value = settings.repo;
+  $('#setBranch').value = settings.branch;
+  $('#setToken').value = settings.token;
+  $('#setPath').value = settings.path;
+}
+function persistSettings(){
+  store.set('push88.user', settings.user);
+  store.set('push88.repo', settings.repo);
+  store.set('push88.branch', settings.branch);
+  store.set('push88.token', settings.token);
+  store.set('push88.path', settings.path);
+}
+$('#saveSettingsBtn').addEventListener('click', async () => {
+  settings.user = $('#setUser').value.trim();
+  settings.repo = $('#setRepo').value.trim();
+  settings.branch = $('#setBranch').value.trim() || 'main';
+  settings.token = $('#setToken').value.trim();
+  settings.path = $('#setPath').value.trim();
+  persistSettings();
+  toast('settings saved · testing…');
+  await testConnection();
+});
+$('#clearSettingsBtn').addEventListener('click', () => {
+  confirmModal('Forget everything?', 'Token, repo and all local data will be removed.', () => {
+    ['user','repo','branch','token','path'].forEach(k => localStorage.removeItem('push88.' + k));
+    location.reload();
+  });
+});
+
+/* ---------- connection ---------- */
+function setConnState(state, title, sub){
+  const strip = $('#connStrip');
+  strip.className = 'conn ' + state;
+  $('#connTitle').textContent = title;
+  $('#connSub').textContent = sub;
+  const dot = $('#connDot');
+  if (state === 'ready') dot.className = 'dot on';
+  else if (state === 'fail') dot.className = 'dot err';
+  else dot.className = 'dot';
+  $('#pushBtn').disabled = state !== 'ready' || queuedFiles.length === 0;
+}
+async function gh(path, opts = {}, retries = 3){
+  if (!settings.token) throw new Error('NO TOKEN · open Settings');
+  let lastErr;
+  for (let i = 0; i < retries; i++){
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 45000);
+      const res = await fetch('https://api.github.com' + path, {
+        ...opts, signal: controller.signal,
+        headers: {
+          'Authorization': 'Bearer ' + settings.token,
+          'Accept': 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28',
+          ...(opts.headers || {})
+        }
+      });
+      clearTimeout(timeout);
+      if (res.ok) return res;
+      if (res.status === 401) throw new Error('TOKEN INVALID · create a new one at github.com/settings/tokens/new');
+      if (res.status === 403){
+        const ra = res.headers.get('Retry-After');
+        throw new Error('rate limited · retry in ' + (ra || 'a while'));
+      }
+      let msg = 'GitHub ' + res.status;
+      try { const j = await res.json(); msg = j.message || msg; } catch(e){}
+      const err = new Error(msg); err.status = res.status; throw err;
+    } catch(err){
+      lastErr = err;
+      const isNet = err.name === 'TypeError' || err.name === 'AbortError';
+      if (isNet && i < retries - 1){ await sleep(1200 * (i + 1)); continue; }
+      throw err;
+    }
+  }
+  throw lastErr;
+}
+async function testConnection(){
+  if (!settings.token || !settings.user || !settings.repo){
+    setConnState('fail', 'Missing settings', 'add user, repo and token');
+    return false;
+  }
+  try {
+    const res = await gh('/repos/' + settings.user + '/' + settings.repo);
+    const data = await res.json();
+    setConnState('ready', 'Connected · ' + data.full_name, data.private ? 'private repo' : 'public repo');
+    logLine('✓ connected to ' + data.full_name, 'ok');
+    return true;
+  } catch(err){
+    setConnState('fail', 'Connection failed', err.message);
+    logLine('✗ ' + err.message, 'err');
+    return false;
+  }
+}
+$('#connBtn').addEventListener('click', () => go('settings'));
+
+/* ---------- file queue ---------- */
+let queuedFiles = [];
+function addFiles(fileList){
+  let added = 0;
+  for (const f of fileList){
+    const path = f.webkitRelativePath ? f.webkitRelativePath.split('/').slice(1).join('/') : f.name;
+    if (!path) continue;
+    queuedFiles.push({ path, file: f });
+    added++;
+  }
+  renderQueue();
+  if (added) toast(added + ' file' + (added > 1 ? 's' : '') + ' queued');
+}
+function renderQueue(){
+  const box = $('#pushFiles');
+  $('#uploadCount').textContent = queuedFiles.length + ' file' + (queuedFiles.length === 1 ? '' : 's');
+  $('#pushBtn').disabled = queuedFiles.length === 0 || !$('#connStrip').classList.contains('ready');
+  if (!queuedFiles.length){ box.innerHTML = ''; return; }
+  box.innerHTML = queuedFiles.map((q, i) => `
+    <div class="file">
+      <div class="file-icon ${fileIconClass(q.path)}">${fileIconSvg(q.path)}</div>
+      <div class="file-info">
+        <div class="name">${esc(q.path)}</div>
+        <div class="meta">${fmtSize(q.file.size)}</div>
+      </div>
+      <div class="file-actions">
+        <button data-i="${i}" class="rm" title="Remove">
+          <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+  `).join('');
+  box.querySelectorAll('.rm').forEach(b => b.addEventListener('click', () => {
+    queuedFiles.splice(+b.dataset.i, 1); renderQueue();
+  }));
+}
+function fileIconClass(p){
+  const ext = (p.split('.').pop() || '').toLowerCase();
+  if (/^(zip|tar|gz|7z|rar)$/.test(ext)) return 'zip';
+  if (/^(png|jpg|jpeg|gif|webp|svg|bmp|ico)$/.test(ext)) return 'img';
+  if (/^(js|ts|html|css|json|md|txt|xml|yml|yaml|py|java|kt|go|rs|c|cpp|h)$/.test(ext)) return 'code';
+  return '';
+}
+function fileIconSvg(p){
+  const ext = (p.split('.').pop() || '').toLowerCase();
+  if (/^(png|jpg|jpeg|gif|webp|svg|bmp|ico)$/.test(ext))
+    return '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>';
+  if (/^(zip|tar|gz|7z|rar)$/.test(ext))
+    return '<svg viewBox="0 0 24 24"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1zM10 12h4"/></svg>';
+  if (/^(js|ts|html|css|json|md|txt|xml|yml|yaml|py|java|kt|go|rs)$/.test(ext))
+    return '<svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>';
+  return '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+}
+
+/* ---------- pickers ---------- */
+$('#pickFilesBtn').addEventListener('click', async () => {
+  if (window.showOpenFilePicker){
+    try {
+      const handles = await window.showOpenFilePicker({ multiple: true });
+      const files = await Promise.all(handles.map(h => h.getFile()));
+      addFiles(files);
+      return;
+    } catch(err){ if (err.name === 'AbortError') return; }
+  }
+  $('#fileInput').click();
+});
+$('#pickFolderBtn').addEventListener('click', async () => {
+  if (window.showDirectoryPicker){
+    try {
+      const dir = await window.showDirectoryPicker({ mode: 'read' });
+      const out = [];
+      async function walk(handle, prefix){
+        for await (const entry of handle.values()){
+          const p = prefix ? prefix + '/' + entry.name : entry.name;
+          if (entry.kind === 'file'){
+            const f = await entry.getFile();
+            try { Object.defineProperty(f, 'webkitRelativePath', { value: p, configurable: true }); }catch(e){}
+            out.push(f);
+          } else {
+            await walk(entry, p);
+          }
+        }
+      }
+      await walk(dir, '');
+      addFiles(out);
+      return;
+    } catch(err){ if (err.name === 'AbortError') return; }
+  }
+  $('#folderInput').click();
+});
+$('#fileInput').addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; });
+$('#folderInput').addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; });
+$('#clearQueueBtn').addEventListener('click', () => { queuedFiles = []; renderQueue(); toast('queue cleared'); });
+
+/* drag & drop */
+const drop = $('#pushDrop');
+['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('drag'); }));
+['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('drag'); }));
+drop.addEventListener('drop', e => { if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files); });
+drop.addEventListener('click', () => $('#pickFilesBtn').click());
+
+/* ---------- upload ---------- */
+function b64FromBytes(bytes){
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+async function fileToB64(file){
+  const buf = new Uint8Array(await file.arrayBuffer());
+  return b64FromBytes(buf);
+}
+function renderProgress(items){
+  const box = $('#pushProgressList');
+  box.innerHTML = items.map(it => `
+    <div class="pitem ${it.status === 'done' ? 'done' : it.status === 'fail' ? 'fail' : ''}">
+      <div class="top">
+        <span class="name">${esc(it.name)}</span>
+        <span class="pct">${it.status === 'done' ? '✓' : it.status === 'fail' ? '✕' : it.pct + '%'}</span>
+      </div>
+      <div class="bar"><i style="width:${it.status === 'done' || it.status === 'fail' ? 100 : it.pct}%"></i></div>
+    </div>
+  `).join('');
+}
+let currentProgressItems = [];
+async function uploadOne(path, file, item){
+  const remotePath = (settings.path ? settings.path.replace(/\/$/, '') + '/' : '') + path;
+  const api = '/repos/' + settings.user + '/' + settings.repo + '/contents/' + encodeURIComponent(remotePath).replace(/%2F/g, '/');
+  let sha = null;
+  try {
+    const res = await gh(api + '?ref=' + encodeURIComponent(settings.branch));
+    const data = await res.json();
+    sha = data.sha;
+  } catch(err){
+    if (err.status !== 404) throw err;
+  }
+  const b64 = await fileToB64(file);
+  item.pct = 60;
+  renderProgress(currentProgressItems);
+  const body = {
+    message: (sha ? 'push88 · update ' : 'push88 · add ') + remotePath,
+    content: b64,
+    branch: settings.branch
+  };
+  if (sha) body.sha = sha;
+  const res = await gh(api, { method: 'PUT', body: JSON.stringify(body) });
+  item.pct = 100;
+  return res;
+}
+$('#pushBtn').addEventListener('click', async () => {
+  if (!queuedFiles.length) return;
+  $('#pushProgress').style.display = '';
+  currentProgressItems = queuedFiles.map(q => ({ name: q.path, pct: 0, status: 'pending' }));
+  renderProgress(currentProgressItems);
+  logLine('> pushing ' + queuedFiles.length + ' files', 'info');
+  let ok = 0, fail = 0;
+  for (let i = 0; i < queuedFiles.length; i++){
+    const q = queuedFiles[i], item = currentProgressItems[i];
+    try {
+      await uploadOne(q.path, q.file, item);
+      item.status = 'done'; item.pct = 100;
+      renderProgress(currentProgressItems);
+      logLine('  ✓ ' + q.path + ' (' + fmtSize(q.file.size) + ')', 'ok');
+      ok++;
+    } catch(err){
+      item.status = 'fail'; item.pct = 100;
+      renderProgress(currentProgressItems);
+      logLine('  ✗ ' + q.path + ' — ' + err.message, 'err');
+      fail++;
+    }
+  }
+  logLine('done · ' + ok + ' ok · ' + fail + ' failed', ok ? 'ok' : 'err');
+  toast(ok + ' uploaded' + (fail ? ' · ' + fail + ' failed' : ''), fail ? 'err' : 'ok');
+  if (!fail){ queuedFiles = []; renderQueue(); }
+});
+
+/* ---------- listing ---------- */
+async function listDir(path){
+  const url = '/repos/' + settings.user + '/' + settings.repo + '/contents/' + encodeURIComponent(path).replace(/%2F/g, '/') + '?ref=' + encodeURIComponent(settings.branch);
+  const res = await gh(url);
+  return await res.json();
+}
+function fileTypeIcon(type){
+  if (type === 'dir')
+    return '<svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2-2h3l2 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7z"/></svg>';
+  return '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+}
+function renderListing(box, items, ctx){
+  if (!items || !items.length){
+    box.innerHTML = '<div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg><h4>Empty folder</h4><p>Nothing here yet.</p></div>';
+    return;
+  }
+  const sorted = items.slice().sort((a, b) => {
+    if (a.type !== b.type) return a.type === 'dir' ? -1 : 1;
+    return a.name.localeCompare(b.name);
+  });
+  box.innerHTML = sorted.map(it => `
+    <div class="file">
+      <div class="file-icon ${it.type === 'dir' ? '' : fileIconClass(it.name)}">${it.type === 'dir' ? fileTypeIcon('dir') : fileIconSvg(it.name)}</div>
+      <div class="file-info">
+        <div class="name">${esc(it.name)}</div>
+        <div class="meta">${it.type === 'dir' ? 'folder' : fmtSize(it.size || 0)}</div>
+      </div>
+      <div class="file-actions">
+        ${it.type === 'file' ? `
+          <button class="dl" data-url="${esc(it.download_url || '')}" data-name="${esc(it.name)}" title="Download">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+          <button class="del" data-sha="${esc(it.sha)}" data-path="${esc(it.path)}" title="Delete">
+            <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          </button>
+        ` : `
+          <button class="open" data-path="${esc(it.path)}" title="Open">
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        `}
+      </div>
+    </div>
+  `).join('');
+  box.querySelectorAll('.open').forEach(b => b.addEventListener('click', () => {
+    const p = b.dataset.path;
+    if (ctx === 'pull'){ $('#pullPath').value = p; refreshPull(); }
+    else { $('#browsePath').value = p; refreshBrowse(); }
+  }));
+  box.querySelectorAll('.dl').forEach(b => b.addEventListener('click', () => {
+    downloadFile(b.dataset.url, b.dataset.name);
+  }));
+  box.querySelectorAll('.del').forEach(b => b.addEventListener('click', () => {
+    const path = b.dataset.path, sha = b.dataset.sha;
+    confirmModal('Delete file?', 'This removes "' + path + '" from the repository.', async () => {
+      try {
+        await gh('/repos/' + settings.user + '/' + settings.repo + '/contents/' + encodeURIComponent(path).replace(/%2F/g, '/'), {
+          method: 'DELETE',
+          body: JSON.stringify({ message: 'push88 · delete ' + path, sha, branch: settings.branch })
+        });
+        toast('deleted', 'ok'); logLine('✓ deleted ' + path, 'ok');
+        ctx === 'pull' ? refreshPull() : refreshBrowse();
+      } catch(err){ toast('delete failed', 'err'); logLine('✗ delete ' + path + ' — ' + err.message, 'err'); }
+    });
+  }));
+}
+async function downloadFile(url, name){
+  if (!url){ toast('no download url', 'err'); return; }
+  try {
+    toast('downloading…');
+    const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + settings.token } });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const blob = await res.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    toast('saved · ' + name, 'ok');
+    logLine('✓ downloaded ' + name, 'ok');
+  } catch(err){
+    toast('download failed', 'err');
+    logLine('✗ download ' + name + ' — ' + err.message, 'err');
+  }
+}
+
+/* ---------- pull ---------- */
+async function refreshPull(){
+  const path = $('#pullPath').value.trim().replace(/^\/+|\/+$/g, '');
+  try {
+    const items = await listDir(path);
+    renderListing($('#pullFiles'), Array.isArray(items) ? items : [], 'pull');
+    logLine('· listed ' + path + ' (' + (Array.isArray(items) ? items.length : 0) + ')', 'dim');
+  } catch(err){
+    toast('list failed', 'err'); logLine('✗ list ' + path + ' — ' + err.message, 'err');
+  }
+}
+$('#refreshPullBtn').addEventListener('click', refreshPull);
+$('#pullPath').addEventListener('keydown', e => { if (e.key === 'Enter') refreshPull(); });
+
+/* ---------- browse ---------- */
+async function refreshBrowse(){
+  const path = $('#browsePath').value.trim().replace(/^\/+|\/+$/g, '');
+  $('#browseTag').textContent = path || 'root';
+  try {
+    const items = await listDir(path);
+    renderListing($('#browseFiles'), Array.isArray(items) ? items : [], 'browse');
+    logLine('· browsed ' + (path || '/'), 'dim');
+  } catch(err){
+    toast('browse failed', 'err'); logLine('✗ browse — ' + err.message, 'err');
+  }
+}
+$('#browseGoBtn').addEventListener('click', refreshBrowse);
+$('#browseRootBtn').addEventListener('click', () => { $('#browsePath').value = ''; refreshBrowse(); });
+$('#browseUpBtn').addEventListener('click', () => {
+  const p = $('#browsePath').value.replace(/\/+$/g, '');
+  $('#browsePath').value = p.includes('/') ? p.slice(0, p.lastIndexOf('/')) : '';
+  refreshBrowse();
+});
+$('#browsePath').addEventListener('keydown', e => { if (e.key === 'Enter') refreshBrowse(); });
+
+/* ---------- modal ---------- */
+let modalAction = null;
+function confirmModal(title, body, action){
+  $('#modalTitle').textContent = title;
+  $('#modalBody').textContent = body;
+  modalAction = action;
+  $('#modalBack').classList.add('open');
+}
+$('#modalCancel').addEventListener('click', () => { $('#modalBack').classList.remove('open'); modalAction = null; });
+$('#modalConfirm').addEventListener('click', async () => {
+  $('#modalBack').classList.remove('open');
+  if (modalAction){ const a = modalAction; modalAction = null; await a(); }
+});
+$('#modalBack').addEventListener('click', e => { if (e.target === $('#modalBack')){ $('#modalBack').classList.remove('open'); modalAction = null; } });
+
+/* ---------- PWA ---------- */
+(function setupPWA(){
+  try {
+    const icon = "data:image/svg+xml;base64," + btoa("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='#0ea5e9'/><path d='M160 320 L256 192 L352 320' fill='none' stroke='white' stroke-width='32' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 192 L256 368' stroke='white' stroke-width='32' stroke-linecap='round'/></svg>");
+    const manifest = {
+      name: 'push88', short_name: 'push88',
+      description: 'Push files to GitHub from your browser.',
+      start_url: '.', scope: '.', display: 'standalone',
+      background_color: '#f4f8fc', theme_color: '#f4f8fc',
+      icons: [
+        { src: icon, sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
+        { src: icon, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
+      ]
+    };
+    const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+    const link = document.createElement('link');
+    link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
+    document.head.appendChild(link);
+    const apple = document.createElement('link');
+    apple.rel = 'apple-touch-icon'; apple.href = icon;
+    document.head.appendChild(apple);
+  } catch(e){}
+})();
+
+/* ---------- init ---------- */
+loadSettingsForm();
+renderQueue();
+(async () => {
+  if (settings.token){
+    logLine('# testing connection…', 'dim');
+    await testConnection();
+  } else {
+    setConnState('fail', 'Not connected', 'open Settings and paste your token');
+    logLine('# no token yet', 'warn');
+  }
+})();
+
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const pl = $('#preloader');
+    pl.classList.add('hide');
+    setTimeout(() => pl.remove(), 600);
+  }, 1400);
+});
+
+})();
+</script>
+</body>
+</html>(path).replace(/%2F/g, '/'), {
+          method: 'DELETE',
+          body: JSON.stringify({ message: 'push88 · delete ' + path, sha, branch: settings.branch })
+        });
+        toast('deleted', 'ok'); logLine('✓ deleted ' + path, 'ok');
+        ctx === 'pull' ? refreshPull() : refreshBrowse();
+      } catch(err){ toast('delete failed', 'err'); logLine('✗ delete ' + path + ' — ' + err.message, 'err'); }
+    });
+  }));
+}
+async function downloadFile(url, name){
+  if (!url){ toast('no download url', 'err'); return; }
+  try {
+    toast('downloading…');
+    const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + settings.token } });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const blob = await res.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    toast('saved · ' + name, 'ok');
+    logLine('✓ downloaded ' + name, 'ok');
+  } catch(err){
+    toast('download failed', 'err');
+    logLine('✗ download ' + name + ' — ' + err.message, 'err');
+  }
+}
+async function refreshPull(){
+  const path = $('#pullPath').value.trim().replace(/^\/+|\/+$/g, '');
+  try {
+    const items = await listDir(path);
+    renderListing($('#pullFiles'), Array.isArray(items) ? items : [], 'pull');
+    logLine('· listed ' + path + ' (' + (Array.isArray(items) ? items.length : 0) + ')', 'dim');
+  } catch(err){
+    toast('list failed', 'err'); logLine('✗ list ' + path + ' — ' + err.message, 'err');
+  }
+}
+$('#refreshPullBtn').addEventListener('click', refreshPull);
+$('#pullPath').addEventListener('keydown', e => { if (e.key === 'Enter') refreshPull(); });
+
+/* ---------- browse ---------- */
+async function refreshBrowse(){
+  const path = $('#browsePath').value.trim().replace(/^\/+|\/+$/g, '');
+  $('#browseTag').textContent = path || 'root';
+  try {
+    const items = await listDir(path);
+    renderListing($('#browseFiles'), Array.isArray(items) ? items : [], 'browse');
+    logLine('· browsed ' + (path || '/'), 'dim');
+  } catch(err){
+    toast('browse failed', 'err'); logLine('✗ browse — ' + err.message, 'err');
+  }
+}
+$('#browseGoBtn').addEventListener('click', refreshBrowse);
+$('#browseRootBtn').addEventListener('click', () => { $('#browsePath').value = ''; refreshBrowse(); });
+$('#browseUpBtn').addEventListener('click', () => {
+  const p = $('#browsePath').value.replace(/\/+$/g, '');
+  $('#browsePath').value = p.includes('/') ? p.slice(0, p.lastIndexOf('/')) : '';
+  refreshBrowse();
+});
+$('#browsePath').addEventListener('keydown', e => { if (e.key === 'Enter') refreshBrowse(); });
+
+/* ---------- modal ---------- */
+let modalAction = null;
+function confirmModal(title, body, action){
+  $('#modalTitle').textContent = title;
+  $('#modalBody').textContent = body;
+  modalAction = action;
+  $('#modalBack').classList.add('open');
+}
+$('#modalCancel').addEventListener('click', () => { $('#modalBack').classList.remove('open'); modalAction = null; });
+$('#modalConfirm').addEventListener('click', async () => {
+  $('#modalBack').classList.remove('open');
+  if (modalAction){ const a = modalAction; modalAction = null; await a(); }
+});
+$('#modalBack').addEventListener('click', e => { if (e.target === $('#modalBack')){ $('#modalBack').classList.remove('open'); modalAction = null; } });
+
+/* ---------- PWA ---------- */
+(function setupPWA(){
+  try {
+    const icon = "data:image/svg+xml;base64," + btoa("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#38bdf8'/><stop offset='1' stop-color='#0ea5e9'/></linearGradient></defs><rect width='512' height='512' rx='112' fill='url(#g)'/><path d='M160 320 L256 192 L352 320' fill='none' stroke='white' stroke-width='32' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 192 L256 368' stroke='white' stroke-width='32' stroke-linecap='round'/></svg>");
+    const manifest = {
+      name: 'push88',
+      short_name: 'push88',
+      description: 'Push files to GitHub from your browser.',
+      start_url: '.', scope: '.',
+      display: 'standalone',
+      background_color: '#eaf4ff',
+      theme_color: '#eaf4ff',
+      icons: [
+        { src: icon, sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
+        { src: icon, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
+      ]
+    };
+    const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+    const link = document.createElement('link');
+    link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
+    document.head.appendChild(link);
+    const apple = document.createElement('link');
+    apple.rel = 'apple-touch-icon'; apple.href = icon;
+    document.head.appendChild(apple);
+  } catch(e){}
+})();
+
+/* ---------- init ---------- */
+loadSettingsForm();
+renderQueue();
+(async () => {
+  if (settings.token){
+    logLine('# testing connection…', 'dim');
+    await testConnection();
+  } else {
+    setConnState('fail', 'Not connected', 'open Settings and paste your token');
+    logLine('# no token yet', 'warn');
+  }
+})();
+
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const pl = $('#preloader');
+    pl.classList.add('hide');
+    setTimeout(() => pl.remove(), 800);
+  }, 3000);
+});
+
+})();
+</script>
+</body>
+</html>
