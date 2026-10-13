@@ -1,0 +1,1067 @@
+<!doctype html>
+<html lang="en" data-theme="ink">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a" id="metaColor">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="issues88">
+<title>issues88</title>
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%230a0a0a'/><path d='M44 24 L24 44 M24 24 h20 v20' stroke='%2384cc16' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root,[data-theme="ink"]{
+  --bg:#0a0a0a;--bg-2:#0f0f0f;--card:#141414;--card-2:#1a1a1a;
+  --ink:#f0f0f0;--ink-2:#9a9a9a;--ink-3:#5a5a5a;
+  --line:rgba(240,240,240,.10);--line-2:rgba(240,240,240,.05);
+  --accent:#84cc16;--accent-2:#a3e635;--accent-soft:rgba(132,204,22,.14);
+  --ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;
+  --grid:none;color-scheme:dark;
+}
+[data-theme="paper"]{
+  --bg:#faf8f2;--bg-2:#f2efe4;--card:#ffffff;--card-2:#f7f5ee;
+  --ink:#1a1a1a;--ink-2:#5a5a5a;--ink-3:#a0a0a0;
+  --line:rgba(0,0,0,.10);--line-2:rgba(0,0,0,.05);
+  --accent:#ea580c;--accent-2:#f97316;--accent-soft:rgba(234,88,12,.10);
+  --ok:#16a34a;--warn:#d97706;--danger:#dc2626;
+  --grid:linear-gradient(rgba(0,0,0,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.035) 1px,transparent 1px);
+  color-scheme:light;
+}
+[data-theme="neon"]{
+  --bg:#050816;--bg-2:#0a1024;--card:#0f1738;--card-2:#131e44;
+  --ink:#e0f0ff;--ink-2:#8098c8;--ink-3:#485880;
+  --line:rgba(0,212,255,.18);--line-2:rgba(0,212,255,.08);
+  --accent:#00d4ff;--accent-2:#22ddff;--accent-soft:rgba(0,212,255,.12);
+  --ok:#22c55e;--warn:#fbbf24;--danger:#f87171;
+  --grid:none;color-scheme:dark;
+}
+[data-theme="clay"]{
+  --bg:#1a1411;--bg-2:#241c17;--card:#2e241d;--card-2:#382c24;
+  --ink:#f5e8d8;--ink-2:#b09880;--ink-3:#6a5a4a;
+  --line:rgba(245,232,216,.12);--line-2:rgba(245,232,216,.05);
+  --accent:#f59e0b;--accent-2:#fbbf24;--accent-soft:rgba(245,158,11,.14);
+  --ok:#84cc16;--warn:#fb923c;--danger:#ef4444;
+  --grid:none;color-scheme:dark;
+}
+[data-theme="mint"]{
+  --bg:#f0faf4;--bg-2:#e0f4e8;--card:#ffffff;--card-2:#f4fbf7;
+  --ink:#0f2419;--ink-2:#4a7a60;--ink-3:#9ac8b0;
+  --line:rgba(15,36,25,.10);--line-2:rgba(15,36,25,.05);
+  --accent:#10b981;--accent-2:#059669;--accent-soft:rgba(16,185,129,.10);
+  --ok:#059669;--warn:#d97706;--danger:#dc2626;
+  --grid:linear-gradient(rgba(15,36,25,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(15,36,25,.03) 1px,transparent 1px);
+  color-scheme:light;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);
+  min-height:100vh;line-height:1.55;font-size:15px;
+  -webkit-font-smoothing:antialiased;
+  transition:background-color .4s ease,color .4s ease;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:var(--grid);background-size:24px 24px;
+  pointer-events:none;z-index:0;
+}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit;font-family:inherit}
+a{color:var(--accent);text-decoration:none}
+svg{display:block}
+.hidden{display:none !important}
+::selection{background:var(--accent);color:var(--bg)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.mono{font-family:'IBM Plex Mono',monospace}
+
+/* preloader */
+#preloader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:grid;place-items:center;transition:opacity .6s ease,visibility .6s ease}
+#preloader.hide{opacity:0;visibility:hidden;pointer-events:none}
+.pl-inner{display:flex;flex-direction:column;align-items:center;gap:20px}
+.pl-mark{width:56px;height:56px}
+.pl-mark svg{width:100%;height:100%;stroke:var(--accent);fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.pl-mark svg path{stroke-dasharray:60;stroke-dashoffset:60;animation:drawMark 1.4s ease forwards}
+@keyframes drawMark{to{stroke-dashoffset:0}}
+.pl-word{font-family:'IBM Plex Mono',monospace;font-size:.85rem;font-weight:600;color:var(--ink-2);letter-spacing:.22em;text-transform:uppercase}
+.pl-bar{width:140px;height:2px;background:var(--line);overflow:hidden}
+.pl-bar i{display:block;height:100%;width:40%;background:var(--accent);animation:barRun 1.4s cubic-bezier(.4,0,.6,1) infinite}
+@keyframes barRun{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+
+/* header */
+.top{
+  position:sticky;top:0;z-index:30;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line-2);
+  padding:14px 20px;padding-top:calc(14px + env(safe-area-inset-top,0));
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
+}
+@media (max-width:600px){.top{padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top,0))}}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-mark{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--accent-soft);
+  display:grid;place-items:center;color:var(--accent);flex-shrink:0;
+}
+.brand-mark svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.brand-name{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:1.15rem;letter-spacing:-.03em;
+}
+.brand-name b{color:var(--accent)}
+.top-actions{display:flex;gap:4px;align-items:center}
+.iconbtn{
+  width:40px;height:40px;border-radius:10px;
+  display:grid;place-items:center;color:var(--ink-2);
+  transition:all .18s ease;position:relative;
+  background:var(--card);border:1px solid var(--line);
+}
+.iconbtn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.iconbtn:active{transform:scale(.94) rotate(-8deg)}
+.iconbtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.iconbtn .dot{
+  position:absolute;top:-1px;right:-1px;width:9px;height:9px;border-radius:50%;
+  background:var(--ink-3);border:2px solid var(--card);box-sizing:content-box;
+}
+.iconbtn .dot.on{background:var(--ok)}
+.iconbtn .dot.off{background:var(--danger)}
+
+/* main */
+main{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:20px 20px 40px}
+@media (max-width:600px){main{padding:16px 16px 40px}}
+
+/* capture card */
+.capture{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:20px;margin-bottom:20px;
+  transition:border-color .25s ease;
+}
+.capture:focus-within{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+.cap-label{
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;
+  font-weight:600;color:var(--ink-3);
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.cap-label .counter{color:var(--ink-3);font-weight:400;letter-spacing:.04em;text-transform:none}
+.cap-title{
+  width:100%;background:transparent;border:0;outline:none;
+  color:var(--ink);font-family:'Space Grotesk',sans-serif;
+  font-size:1.15rem;font-weight:500;line-height:1.4;padding:4px 0;
+  border-bottom:1.5px solid var(--line);transition:border-color .2s ease;
+}
+.cap-title:focus{border-color:var(--accent)}
+.cap-title::placeholder{color:var(--ink-3)}
+.cap-toggle{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:12px;padding:4px 0;color:var(--ink-2);
+  font-family:'IBM Plex Mono',monospace;font-size:.74rem;font-weight:500;
+  transition:color .18s ease;
+}
+.cap-toggle:hover{color:var(--accent)}
+.cap-toggle svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .22s ease}
+.cap-toggle.open svg{transform:rotate(45deg)}
+.cap-body-wrap{margin-top:12px;overflow:hidden;max-height:0;transition:max-height .3s cubic-bezier(.2,.8,.2,1)}
+.cap-body-wrap.open{max-height:400px}
+.cap-body{
+  width:100%;min-height:100px;background:var(--bg-2);
+  border:1.5px solid var(--line);border-radius:10px;
+  padding:12px 14px;color:var(--ink);font-size:.92rem;line-height:1.6;
+  outline:none;resize:vertical;transition:border-color .2s ease;
+  font-family:'Space Grotesk',sans-serif;
+}
+.cap-body:focus{border-color:var(--accent)}
+
+.labels-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.label-chip{
+  padding:5px 11px;border-radius:99px;
+  background:var(--card-2);border:1px solid var(--line);
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:500;
+  color:var(--ink-2);cursor:pointer;transition:all .18s ease;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.label-chip::before{
+  content:'';width:7px;height:7px;border-radius:50%;background:var(--ink-3);
+  transition:background .18s ease;
+}
+.label-chip[data-l="bug"]::before{background:#ef4444}
+.label-chip[data-l="enhancement"]::before{background:#38bdf8}
+.label-chip[data-l="documentation"]::before{background:#a78bfa}
+.label-chip[data-l="question"]::before{background:#f472b6}
+.label-chip[data-l="idea"]::before{background:#fbbf24}
+.label-chip[data-l="urgent"]::before{background:#f97316}
+.label-chip[data-l="wontfix"]::before{background:#94a3b8}
+.label-chip:hover{border-color:var(--accent);color:var(--ink)}
+.label-chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
+
+.repo-row{
+  display:flex;align-items:center;gap:10px;margin-top:16px;
+  padding-top:16px;border-top:1px dashed var(--line);
+}
+.repo-row .arrow{color:var(--ink-3);font-family:'IBM Plex Mono',monospace;font-size:.9rem;flex-shrink:0}
+.repo-row select{
+  flex:1;min-width:0;background:var(--bg-2);border:1.5px solid var(--line);
+  border-radius:10px;padding:9px 12px;
+  font-family:'IBM Plex Mono',monospace;font-size:.8rem;
+  color:var(--ink);outline:none;cursor:pointer;transition:border-color .2s ease;
+}
+.repo-row select:focus{border-color:var(--accent)}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 18px;border-radius:11px;font-weight:600;font-size:.9rem;
+  background:var(--accent);color:var(--bg);
+  transition:all .2s cubic-bezier(.2,.8,.2,1);
+  border:1px solid transparent;
+}
+.btn:hover{background:var(--accent-2);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.btn.ghost{background:var(--card-2);color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{background:var(--card);border-color:var(--accent);color:var(--accent)}
+.btn.block{width:100%;margin-top:16px}
+
+/* sections */
+.section{margin-top:28px}
+.section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;
+}
+.section-head h2{
+  font-family:'IBM Plex Mono',monospace;font-size:.72rem;
+  font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-2);
+}
+.section-head .count{
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;
+  color:var(--ink-3);padding:2px 8px;border-radius:99px;
+  background:var(--card-2);
+}
+.list{display:flex;flex-direction:column;gap:6px}
+
+.item{
+  display:flex;align-items:flex-start;gap:12px;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:11px;padding:12px 14px;
+  transition:all .18s ease;
+}
+.item:hover{border-color:color-mix(in srgb,var(--accent) 35%,var(--line))}
+.item-status{
+  width:22px;height:22px;border-radius:6px;flex-shrink:0;
+  display:grid;place-items:center;margin-top:2px;
+  background:var(--card-2);color:var(--ink-3);
+}
+.item-status svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.item.pending .item-status{background:color-mix(in srgb,var(--warn) 15%,transparent);color:var(--warn)}
+.item.sending .item-status{background:var(--accent-soft);color:var(--accent)}
+.item.sending .item-status svg{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.item.failed .item-status{background:color-mix(in srgb,var(--danger) 15%,transparent);color:var(--danger)}
+.item.sent .item-status{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.item-body{flex:1;min-width:0}
+.item-title{
+  font-weight:500;font-size:.94rem;line-height:1.35;
+  margin-bottom:4px;word-break:break-word;
+}
+.item-meta{
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;
+  color:var(--ink-3);line-height:1.4;
+}
+.item-meta .repo{
+  background:var(--card-2);padding:1px 6px;border-radius:4px;
+  color:var(--ink-2);max-width:180px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.item-meta .num{color:var(--accent);font-weight:600}
+.item-meta .lbl{color:var(--ink-3)}
+.item-meta .err{color:var(--danger);word-break:break-all}
+.item-actions{display:flex;gap:2px;flex-shrink:0}
+.item-actions button{
+  width:30px;height:30px;border-radius:8px;
+  display:grid;place-items:center;color:var(--ink-3);
+  transition:all .15s ease;
+}
+.item-actions button:hover{background:var(--card-2);color:var(--accent)}
+.item-actions button.del:hover{color:var(--danger)}
+.item-actions svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.empty{
+  text-align:center;padding:32px 16px;
+  font-family:'IBM Plex Mono',monospace;font-size:.75rem;
+  color:var(--ink-3);line-height:1.7;
+}
+.empty svg{
+  width:36px;height:36px;stroke:var(--ink-3);fill:none;
+  stroke-width:1.4;margin:0 auto 12px;opacity:.6;
+}
+
+/* modal */
+.modal-back{
+  position:fixed;inset:0;z-index:1500;
+  background:color-mix(in srgb,var(--bg) 70%,rgba(0,0,0,.6));
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;
+  overflow-y:auto;padding:20px;
+}
+.modal-back.open{opacity:1;visibility:visible}
+.modal{
+  width:100%;max-width:600px;margin:30px auto;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:16px;padding:24px;
+  box-shadow:0 40px 80px -32px rgba(0,0,0,.6);
+  transform:translateY(10px);transition:transform .3s cubic-bezier(.2,.8,.2,1);
+}
+.modal-back.open .modal{transform:none}
+@media (max-width:600px){.modal{padding:20px;margin:16px auto}}
+.modal-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;
+}
+.modal-head h2{
+  font-family:'Space Grotesk',sans-serif;font-weight:600;
+  font-size:1.15rem;letter-spacing:-.02em;
+}
+.close-btn{
+  width:34px;height:34px;border-radius:9px;
+  display:grid;place-items:center;color:var(--ink-3);
+  transition:all .18s ease;
+}
+.close-btn:hover{background:var(--card-2);color:var(--ink)}
+.close-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+.field{margin-bottom:16px}
+.field label{
+  display:block;font-family:'IBM Plex Mono',monospace;
+  font-size:.66rem;font-weight:600;color:var(--ink-3);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px;
+}
+.field input,.field textarea{
+  width:100%;background:var(--bg-2);border:1.5px solid var(--line);
+  border-radius:10px;padding:11px 13px;
+  color:var(--ink);font-size:.88rem;outline:none;
+  transition:border-color .2s ease;font-family:'IBM Plex Mono',monospace;
+}
+.field input:focus,.field textarea:focus{border-color:var(--accent)}
+.field textarea{min-height:80px;resize:vertical;line-height:1.6}
+.field .hint{
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;
+  color:var(--ink-3);margin-top:6px;line-height:1.55;
+}
+.field .hint a{color:var(--accent);border-bottom:1px dotted currentColor}
+
+/* guide content */
+.guide-lead{
+  font-size:.95rem;color:var(--ink-2);line-height:1.7;
+  margin-bottom:22px;
+  padding:14px 16px;border-radius:11px;
+  background:var(--bg-2);border-left:3px solid var(--accent);
+}
+.guide-lead b{color:var(--ink);font-weight:600}
+.guide-section{margin-bottom:22px}
+.guide-section:last-child{margin-bottom:0}
+.guide-section h3{
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;
+  font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px;
+  display:flex;align-items:center;gap:10px;
+}
+.guide-section h3::after{
+  content:'';flex:1;height:1px;background:var(--line-2);
+}
+.guide-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.guide-list li{
+  display:flex;gap:11px;align-items:flex-start;
+  font-size:.88rem;color:var(--ink-2);line-height:1.55;
+}
+.guide-list li .n{
+  width:22px;height:22px;border-radius:6px;flex-shrink:0;
+  background:var(--accent-soft);color:var(--accent);
+  display:grid;place-items:center;
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:700;
+  margin-top:1px;
+}
+.guide-list li b{color:var(--ink);font-weight:600}
+.guide-list li code{
+  font-family:'IBM Plex Mono',monospace;font-size:.82em;
+  background:var(--card-2);padding:1px 6px;border-radius:4px;
+  color:var(--accent);
+}
+.feature-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:10px;
+}
+.feature{
+  padding:12px 14px;border-radius:11px;
+  background:var(--bg-2);border:1px solid var(--line-2);
+  display:flex;gap:10px;align-items:flex-start;
+}
+.feature-icon{
+  width:28px;height:28px;border-radius:8px;flex-shrink:0;
+  background:var(--accent-soft);color:var(--accent);
+  display:grid;place-items:center;
+}
+.feature-icon svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.feature-text h4{font-size:.85rem;font-weight:600;margin-bottom:2px;color:var(--ink)}
+.feature-text p{font-size:.78rem;color:var(--ink-3);line-height:1.5}
+
+/* toast */
+.toast{
+  position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0));
+  transform:translate(-50%,120%);z-index:2000;
+  padding:11px 20px;border-radius:10px;
+  background:var(--ink);color:var(--bg);
+  font-family:'IBM Plex Mono',monospace;font-size:.76rem;font-weight:500;
+  box-shadow:0 20px 40px -16px rgba(0,0,0,.5);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1);
+  max-width:calc(100vw - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.toast.show{transform:translate(-50%,0)}
+.toast.err{background:var(--danger);color:#fff}
+.toast.ok{background:var(--ok);color:#fff}
+
+/* footer */
+.foot{
+  margin-top:40px;padding:20px 0;text-align:center;
+  font-family:'IBM Plex Mono',monospace;font-size:.66rem;
+  color:var(--ink-3);letter-spacing:.03em;line-height:1.7;
+}
+.foot b{color:var(--accent)}
+.foot a{color:var(--ink-3)}
+.foot a:hover{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<div id="preloader">
+  <div class="pl-inner">
+    <div class="pl-mark">
+      <svg viewBox="0 0 24 24"><path d="M20 6 L6 20 M6 8 v12 h12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="pl-word">issues88</div>
+    <div class="pl-bar"><i></i></div>
+  </div>
+</div>
+
+<header class="top">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.83z"/><circle cx="7" cy="7" r="1.5"/></svg>
+    </div>
+    <div class="brand-name">issues<b>88</b></div>
+  </div>
+  <div class="top-actions">
+    <button class="iconbtn" id="themeBtn" title="change theme">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+    </button>
+    <button class="iconbtn" id="helpBtn" title="guide">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor" stroke="none"/></svg>
+    </button>
+    <button class="iconbtn" id="settingsBtn" title="settings">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span class="dot off" id="connDot"></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="capture">
+    <div class="cap-label">
+      <span>new issue</span>
+      <span class="counter" id="counter">0 / 200</span>
+    </div>
+    <input type="text" id="titleInput" class="cap-title" placeholder="what did you notice?" maxlength="200" autocomplete="off" spellcheck="false">
+    <button class="cap-toggle" id="toggleBody">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      add details
+    </button>
+    <div class="cap-body-wrap" id="bodyWrap">
+      <textarea id="bodyInput" class="cap-body" placeholder="more context, steps to reproduce, expected behavior..."></textarea>
+    </div>
+
+    <div class="labels-row" id="labelsRow"></div>
+
+    <div class="repo-row">
+      <span class="arrow">→</span>
+      <select id="repoSelect"></select>
+    </div>
+
+    <button class="btn block" id="captureBtn" disabled>
+      <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+      Capture issue
+    </button>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Pending</h2>
+      <span class="count" id="pendingCount">0</span>
+    </div>
+    <div class="list" id="pendingList"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Sent</h2>
+      <span class="count" id="sentCount">0</span>
+    </div>
+    <div class="list" id="sentList"></div>
+  </section>
+
+  <footer class="foot">
+    <b>issues88</b> · personal build · © 2025 · MC88<br>
+    <a href="mailto:mohamed005cheikh@gmail.com">mohamed005cheikh@gmail.com</a>
+    &nbsp;·&nbsp;
+    <a href="https://wa.me/22230726475" target="_blank" rel="noopener">+222 30 72 64 75</a>
+  </footer>
+</main>
+
+<!-- settings modal -->
+<div class="modal-back" id="settingsModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Settings</h2>
+      <button class="close-btn" data-close>
+        <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="field">
+      <label>GitHub username</label>
+      <input type="text" id="setUser" spellcheck="false" autocomplete="off" placeholder="your-username">
+    </div>
+    <div class="field">
+      <label>Personal access token</label>
+      <input type="password" id="setToken" spellcheck="false" autocomplete="off" placeholder="ghp_...">
+      <p class="hint">Scopes: <b>repo</b>. Create at <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener">github.com/settings/tokens/new</a>. Stored only on this device.</p>
+    </div>
+    <div class="field">
+      <label>Repositories (one per line)</label>
+      <textarea id="setRepos" spellcheck="false" placeholder="owner/repo&#10;owner/another-repo"></textarea>
+      <p class="hint">Full names like <b>user/project</b>. First one is the default.</p>
+    </div>
+    <div class="field">
+      <label>Labels</label>
+      <input type="text" id="setLabels" spellcheck="false" placeholder="bug, enhancement, idea">
+      <p class="hint">Comma-separated. Must exist on the repo or they are silently ignored.</p>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:20px">
+      <button class="btn" id="saveSettingsBtn">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+        Save
+      </button>
+      <button class="btn ghost" id="testBtn">
+        <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Test
+      </button>
+      <button class="btn ghost" id="clearBtn" style="margin-inline-start:auto">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        Forget
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- guide modal -->
+<div class="modal-back" id="guideModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>How issues88 helps you</h2>
+      <button class="close-btn" data-close>
+        <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <p class="guide-lead">
+      <b>issues88</b> is a notebook for GitHub issues. You notice something on your project while away from your computer, you write it here in three seconds, and it lands on GitHub automatically. No laptop, no browser tabs, no friction.
+    </p>
+
+    <div class="guide-section">
+      <h3>First time setup</h3>
+      <ol class="guide-list">
+        <li><span class="n">1</span><div>Create a <b>personal access token</b> on GitHub with the <code>repo</code> scope.</div></li>
+        <li><span class="n">2</span><div>Open <b>Settings</b> (gear icon) and paste your username, token and repo names.</div></li>
+        <li><span class="n">3</span><div>Tap <b>Test</b>. You should see a green confirmation.</div></li>
+      </ol>
+    </div>
+
+    <div class="guide-section">
+      <h3>Daily use</h3>
+      <ol class="guide-list">
+        <li><span class="n">1</span><div>Type a short title of what you noticed.</div></li>
+        <li><span class="n">2</span><div>Optionally open <b>add details</b> and write more context.</div></li>
+        <li><span class="n">3</span><div>Tap any <b>labels</b> you want the issue tagged with.</div></li>
+        <li><span class="n">4</span><div>Choose the repo from the dropdown.</div></li>
+        <li><span class="n">5</span><div>Tap <b>Capture issue</b>. It goes to GitHub immediately.</div></li>
+      </ol>
+    </div>
+
+    <div class="guide-section">
+      <h3>What it can do</h3>
+      <div class="feature-grid">
+        <div class="feature">
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></div>
+          <div class="feature-text"><h4>Instant capture</h4><p>One field, one tap. From pocket to GitHub in seconds.</p></div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="feature-text"><h4>Offline queue</h4><p>Write on the subway. It sends itself when you have signal again.</p></div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></div>
+          <div class="feature-text"><h4>Multi-repo</h4><p>Track issues across several projects from one screen.</p></div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.83z"/><circle cx="7" cy="7" r="1.5"/></svg></div>
+          <div class="feature-text"><h4>Labels</h4><p>Tag as bug, idea, urgent — before you forget why it mattered.</p></div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></div>
+          <div class="feature-text"><h4>Retry</h4><p>Any failed issue stays in the queue. One tap retries it.</p></div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8M12 8v8"/></svg></div>
+          <div class="feature-text"><h4>Installable</h4><p>Add to home screen. Runs like a native app, no store needed.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="guide-section">
+      <h3>Good to know</h3>
+      <ol class="guide-list">
+        <li><span class="n">·</span><div>Your token stays <b>only on this device</b>. Nothing is sent to any server other than GitHub itself.</div></li>
+        <li><span class="n">·</span><div>Press <code>Ctrl</code> + <code>Enter</code> to capture without leaving the title field.</div></li>
+        <li><span class="n">·</span><div>Tap the <b>theme icon</b> at the top to switch between Ink, Paper, Neon, Clay and Mint.</div></li>
+        <li><span class="n">·</span><div>The green dot on the gear means you are connected. Red means the token is missing or wrong.</div></li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+const CONFIG = {
+  user: 'YOUR_USERNAME',
+  repos: ['YOUR_USERNAME/YOUR_REPO'],
+  labels: ['bug','enhancement','idea']
+};
+
+const $ = (s,r=document) => r.querySelector(s);
+const $$ = (s,r=document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s).replace(/[&<>"']/g,c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const store = {
+  get(k,d){ try{ const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+};
+
+const state = {
+  user: store.get('issues88.user', CONFIG.user),
+  token: store.get('issues88.token', ''),
+  repos: store.get('issues88.repos', CONFIG.repos),
+  labels: store.get('issues88.labels', CONFIG.labels),
+  queue: store.get('issues88.queue', []),
+  theme: store.get('issues88.theme', 'ink'),
+  activeRepo: '',
+  activeLabels: new Set()
+};
+state.activeRepo = store.get('issues88.activeRepo', state.repos[0] || '');
+
+let toastTimer;
+function toast(msg, cls){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = 'toast' + (cls ? ' ' + cls : '');
+  void t.offsetWidth;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* theme cycling */
+const THEMES = ['ink','paper','neon','clay','mint'];
+const THEME_LABEL = { ink:'Ink', paper:'Paper', neon:'Neon', clay:'Clay', mint:'Mint' };
+const META_COLORS = { ink:'#0a0a0a', paper:'#faf8f2', neon:'#050816', clay:'#1a1411', mint:'#f0faf4' };
+function applyTheme(t){
+  if (!THEMES.includes(t)) t = 'ink';
+  document.documentElement.dataset.theme = t;
+  state.theme = t;
+  store.set('issues88.theme', t);
+  $('#metaColor').setAttribute('content', META_COLORS[t]);
+}
+applyTheme(state.theme);
+$('#themeBtn').addEventListener('click', () => {
+  const i = THEMES.indexOf(state.theme);
+  const next = THEMES[(i + 1) % THEMES.length];
+  applyTheme(next);
+  toast('theme · ' + THEME_LABEL[next]);
+});
+
+/* api */
+async function gh(path, opts = {}){
+  if (!state.token) throw new Error('no token — open settings');
+  const res = await fetch('https://api.github.com' + path, {
+    ...opts,
+    headers: {
+      'Authorization': 'Bearer ' + state.token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      ...(opts.headers || {})
+    }
+  });
+  if (res.ok) return res;
+  if (res.status === 401) throw new Error('invalid token');
+  if (res.status === 404) throw new Error('repo not found');
+  if (res.status === 403){
+    const ra = res.headers.get('Retry-After');
+    throw new Error('rate limited' + (ra ? ' — retry in ' + ra + 's' : ''));
+  }
+  let msg = 'github ' + res.status;
+  try { const j = await res.json(); msg = j.message || msg; }catch(e){}
+  const err = new Error(msg); err.status = res.status; throw err;
+}
+
+function setConn(status){
+  const dot = $('#connDot');
+  dot.className = 'dot ' + (status === 'on' ? 'on' : 'off');
+}
+function updateConnDot(){ setConn(state.token ? 'on' : 'off'); }
+
+/* capture */
+const titleEl = $('#titleInput');
+const bodyEl = $('#bodyInput');
+const counterEl = $('#counter');
+
+titleEl.addEventListener('input', () => {
+  counterEl.textContent = titleEl.value.length + ' / 200';
+  $('#captureBtn').disabled = !titleEl.value.trim() || !state.activeRepo;
+});
+
+$('#toggleBody').addEventListener('click', () => {
+  const wrap = $('#bodyWrap');
+  const btn = $('#toggleBody');
+  const open = wrap.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  if (open) bodyEl.focus();
+});
+
+function renderLabelChips(){
+  const box = $('#labelsRow');
+  box.innerHTML = state.labels.map(l => {
+    const on = state.activeLabels.has(l) ? ' on' : '';
+    return `<button class="label-chip${on}" data-l="${esc(l)}">${esc(l)}</button>`;
+  }).join('');
+  box.querySelectorAll('.label-chip').forEach(c => c.addEventListener('click', () => {
+    const l = c.dataset.l;
+    if (state.activeLabels.has(l)) state.activeLabels.delete(l);
+    else state.activeLabels.add(l);
+    c.classList.toggle('on');
+  }));
+}
+
+function renderRepoSelect(){
+  const sel = $('#repoSelect');
+  if (!state.repos.length){
+    sel.innerHTML = '<option value="">no repos — open settings</option>';
+    sel.disabled = true;
+    return;
+  }
+  sel.disabled = false;
+  sel.innerHTML = state.repos.map(r => `<option value="${esc(r)}"${r === state.activeRepo ? ' selected' : ''}>${esc(r)}</option>`).join('');
+  if (!state.repos.includes(state.activeRepo)){
+    state.activeRepo = state.repos[0];
+    sel.value = state.activeRepo;
+  }
+}
+$('#repoSelect').addEventListener('change', e => {
+  state.activeRepo = e.target.value;
+  store.set('issues88.activeRepo', state.activeRepo);
+  $('#captureBtn').disabled = !titleEl.value.trim() || !state.activeRepo;
+});
+
+$('#captureBtn').addEventListener('click', () => {
+  const title = titleEl.value.trim();
+  if (!title) return;
+  const item = {
+    id: 'i' + Date.now() + Math.random().toString(36).slice(2,6),
+    title,
+    body: bodyEl.value.trim(),
+    labels: Array.from(state.activeLabels),
+    repo: state.activeRepo,
+    createdAt: Date.now(),
+    status: 'pending',
+    error: ''
+  };
+  state.queue.unshift(item);
+  persistQueue();
+  titleEl.value = '';
+  bodyEl.value = '';
+  state.activeLabels.clear();
+  counterEl.textContent = '0 / 200';
+  $('#captureBtn').disabled = true;
+  renderLabelChips();
+  renderLists();
+  toast('captured · sending…');
+  trySend(item.id);
+});
+
+function persistQueue(){ store.set('issues88.queue', state.queue); }
+function getQueue(){ return state.queue.filter(x => x.status !== 'sent'); }
+function getSent(){ return state.queue.filter(x => x.status === 'sent'); }
+
+async function trySend(id){
+  const item = state.queue.find(x => x.id === id);
+  if (!item || item.status === 'sent' || item.status === 'sending') return;
+  if (!state.token){ item.status = 'pending'; item.error = 'no token'; persistQueue(); renderLists(); return; }
+  if (!navigator.onLine){ item.status = 'pending'; item.error = 'offline'; persistQueue(); renderLists(); return; }
+
+  item.status = 'sending';
+  item.error = '';
+  persistQueue();
+  renderLists();
+
+  try {
+    const body = { title: item.title, body: item.body || '' };
+    if (item.labels && item.labels.length) body.labels = item.labels;
+    const res = await gh('/repos/' + item.repo + '/issues', { method: 'POST', body: JSON.stringify(body) });
+    const data = await res.json();
+    item.status = 'sent';
+    item.issueNumber = data.number;
+    item.issueUrl = data.html_url;
+    item.sentAt = Date.now();
+    persistQueue();
+    renderLists();
+    toast('#' + data.number + ' sent', 'ok');
+  } catch(err){
+    item.status = 'failed';
+    item.error = err.message;
+    persistQueue();
+    renderLists();
+    toast('failed · ' + err.message, 'err');
+  }
+}
+async function sendAll(){
+  const pending = state.queue.filter(x => x.status === 'pending' || x.status === 'failed');
+  for (const it of pending){
+    await trySend(it.id);
+    await new Promise(r => setTimeout(r, 400));
+  }
+}
+
+function timeAgo(ts){
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 60) return 'just now';
+  if (s < 3600) return Math.floor(s / 60) + 'm';
+  if (s < 86400) return Math.floor(s / 3600) + 'h';
+  return Math.floor(s / 86400) + 'd';
+}
+const ICONS = {
+  pending: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  sending: '<svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>',
+  failed: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>',
+  sent: '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'
+};
+const ACTION_ICONS = {
+  retry: '<svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>',
+  del: '<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+  open: '<svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>'
+};
+
+function renderItem(x, sent){
+  const st = sent ? 'sent' : x.status;
+  const cls = 'item ' + st;
+  const showRetry = !sent && (x.status === 'failed' || x.status === 'pending');
+  const showOpen = sent && x.issueUrl;
+  const labelsLine = (x.labels && x.labels.length) ? x.labels.map(l => '#' + l).join(' ') : '';
+  const errLine = x.error ? `<span class="err">${esc(x.error)}</span>` : '';
+  const num = sent && x.issueNumber ? `<span class="num">#${x.issueNumber}</span>` : '';
+  return `
+    <div class="${cls}" data-id="${x.id}">
+      <div class="item-status">${ICONS[st]}</div>
+      <div class="item-body">
+        <div class="item-title">${esc(x.title)}</div>
+        <div class="item-meta">
+          ${num}
+          <span class="repo">${esc(x.repo)}</span>
+          ${labelsLine ? `<span class="lbl">${esc(labelsLine)}</span>` : ''}
+          <span class="lbl">${timeAgo(sent && x.sentAt ? x.sentAt : x.createdAt)}</span>
+          ${errLine}
+        </div>
+      </div>
+      <div class="item-actions">
+        ${showRetry ? `<button data-act="retry" title="retry">${ACTION_ICONS.retry}</button>` : ''}
+        ${showOpen ? `<button data-act="open" title="open">${ACTION_ICONS.open}</button>` : ''}
+        <button data-act="del" class="del" title="remove">${ACTION_ICONS.del}</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderLists(){
+  const pending = getQueue();
+  const sent = getSent().slice(0, 30);
+
+  $('#pendingCount').textContent = pending.length;
+  $('#sentCount').textContent = sent.length;
+
+  const pBox = $('#pendingList');
+  pBox.innerHTML = pending.length
+    ? pending.map(x => renderItem(x, false)).join('')
+    : `<div class="empty"><svg viewBox="0 0 24 24"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/></svg>nothing pending</div>`;
+
+  const sBox = $('#sentList');
+  sBox.innerHTML = sent.length
+    ? sent.map(x => renderItem(x, true)).join('')
+    : `<div class="empty"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>nothing sent yet</div>`;
+
+  $$('.item-actions button').forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      const id = b.closest('.item').dataset.id;
+      const act = b.dataset.act;
+      if (act === 'retry') trySend(id);
+      else if (act === 'del'){
+        state.queue = state.queue.filter(x => x.id !== id);
+        persistQueue(); renderLists(); toast('removed');
+      } else if (act === 'open'){
+        const item = state.queue.find(x => x.id === id);
+        if (item && item.issueUrl) window.open(item.issueUrl, '_blank');
+      }
+    });
+  });
+}
+
+/* modals */
+function openModal(id){ $(id).classList.add('open'); }
+function closeModal(id){ $(id).classList.remove('open'); }
+$$('[data-close]').forEach(b => b.addEventListener('click', e => e.target.closest('.modal-back').classList.remove('open')));
+$$('.modal-back').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }));
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') $$('.modal-back.open').forEach(m => m.classList.remove('open'));
+});
+
+$('#helpBtn').addEventListener('click', () => openModal('#guideModal'));
+$('#settingsBtn').addEventListener('click', () => {
+  $('#setUser').value = state.user || '';
+  $('#setToken').value = state.token || '';
+  $('#setRepos').value = state.repos.join('\n');
+  $('#setLabels').value = state.labels.join(', ');
+  openModal('#settingsModal');
+});
+
+$('#saveSettingsBtn').addEventListener('click', () => {
+  state.user = $('#setUser').value.trim();
+  state.token = $('#setToken').value.trim();
+  state.repos = $('#setRepos').value.split('\n').map(s => s.trim()).filter(Boolean);
+  state.labels = $('#setLabels').value.split(',').map(s => s.trim()).filter(Boolean);
+  if (!state.repos.length) state.repos = CONFIG.repos;
+  if (!state.labels.length) state.labels = CONFIG.labels;
+  if (!state.repos.includes(state.activeRepo)) state.activeRepo = state.repos[0];
+  store.set('issues88.user', state.user);
+  store.set('issues88.token', state.token);
+  store.set('issues88.repos', state.repos);
+  store.set('issues88.labels', state.labels);
+  store.set('issues88.activeRepo', state.activeRepo);
+  updateConnDot();
+  renderLabelChips();
+  renderRepoSelect();
+  closeModal('#settingsModal');
+  toast('saved', 'ok');
+});
+
+$('#testBtn').addEventListener('click', async () => {
+  const user = $('#setUser').value.trim();
+  const token = $('#setToken').value.trim();
+  const repos = $('#setRepos').value.split('\n').map(s => s.trim()).filter(Boolean);
+  if (!user || !token || !repos.length){ toast('fill user, token, repos', 'err'); return; }
+  const oldToken = state.token; state.token = token;
+  try {
+    const me = await gh('/user');
+    const data = await me.json();
+    let ok = 0;
+    for (const r of repos){ try { await gh('/repos/' + r); ok++; }catch(e){} }
+    toast('ok · ' + data.login + ' · ' + ok + '/' + repos.length + ' repos', 'ok');
+  } catch(err){
+    state.token = oldToken;
+    toast('failed · ' + err.message, 'err');
+  }
+});
+
+$('#clearBtn').addEventListener('click', () => {
+  if (!confirm('forget everything stored on this device?')) return;
+  ['issues88.user','issues88.token','issues88.repos','issues88.labels','issues88.queue','issues88.activeRepo'].forEach(k => localStorage.removeItem(k));
+  location.reload();
+});
+
+/* online */
+window.addEventListener('online', () => { toast('back online', 'ok'); setTimeout(sendAll, 800); });
+window.addEventListener('offline', () => toast('offline · queue kept', 'err'));
+
+/* shortcut */
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && !$('#captureBtn').disabled){
+    $('#captureBtn').click();
+  }
+});
+
+/* pwa */
+(function setupPWA(){
+  try {
+    const icon = "data:image/svg+xml;base64," + btoa("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='96' fill='#0a0a0a'/><path d='M352 192 L192 352 M192 192 h160 v160' stroke='#84cc16' stroke-width='48' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    const manifest = {
+      name:'issues88', short_name:'issues88',
+      description:'Capture GitHub issues from your phone.',
+      start_url:'.', scope:'.', display:'standalone',
+      background_color:'#0a0a0a', theme_color:'#0a0a0a',
+      icons:[
+        { src:icon, sizes:'192x192', type:'image/svg+xml', purpose:'any' },
+        { src:icon, sizes:'512x512', type:'image/svg+xml', purpose:'any maskable' }
+      ]
+    };
+    const blob = new Blob([JSON.stringify(manifest)], { type:'application/manifest+json' });
+    const link = document.createElement('link');
+    link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
+    document.head.appendChild(link);
+    const apple = document.createElement('link');
+    apple.rel = 'apple-touch-icon'; apple.href = icon;
+    document.head.appendChild(apple);
+  }catch(e){}
+})();
+
+/* init */
+renderLabelChips();
+renderRepoSelect();
+renderLists();
+updateConnDot();
+
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const pl = $('#preloader');
+    pl.classList.add('hide');
+    setTimeout(() => pl.remove(), 700);
+  }, 3000);
+});
+
+if (state.token && navigator.onLine) setTimeout(sendAll, 1200);
+
+})();
+</script>
+</body>
+</html>
